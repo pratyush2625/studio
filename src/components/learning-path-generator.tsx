@@ -20,23 +20,51 @@ function SubmitButton() {
   );
 }
 
+const exampleGoals = [
+    'Become a Data Scientist',
+    'Learn Full-Stack Web Development',
+    'Master UI/UX Design',
+    'Create Mobile Apps with React Native'
+]
+
 export function LearningPathGenerator() {
   const [state, formAction] = useActionState(createLearningPath, undefined);
+  const formRef = React.useRef<HTMLFormElement>(null);
+  const inputRef = React.useRef<HTMLInputElement>(null);
+
+  const handleExampleClick = (goal: string) => {
+    if (inputRef.current) {
+        inputRef.current.value = goal;
+        formRef.current?.requestSubmit();
+    }
+  }
 
   return (
     <div className="grid md:grid-cols-2 gap-8">
-      <form action={formAction} className="space-y-4">
-        <div className="space-y-2">
-          <Label htmlFor="goals">Your Learning Goal</Label>
-          <Input id="goals" name="goals" placeholder="e.g., Become a full-stack web developer" required />
+      <div>
+        <form ref={formRef} action={formAction} className="space-y-4">
+          <div className="space-y-2">
+            <Label htmlFor="goals">Your Learning Goal</Label>
+            <Input ref={inputRef} id="goals" name="goals" placeholder="e.g., Become a full-stack web developer" required />
+          </div>
+          <SubmitButton />
+          {state?.error && (
+            <Alert variant="destructive">
+              <AlertDescription>{state.error}</AlertDescription>
+            </Alert>
+          )}
+        </form>
+         <div className="mt-6">
+            <p className="text-sm font-medium text-muted-foreground mb-2">Or try an example:</p>
+            <div className="flex flex-wrap gap-2">
+                {exampleGoals.map(goal => (
+                    <Button key={goal} variant="outline" size="sm" onClick={() => handleExampleClick(goal)}>
+                        {goal}
+                    </Button>
+                ))}
+            </div>
         </div>
-        <SubmitButton />
-        {state?.error && (
-          <Alert variant="destructive">
-            <AlertDescription>{state.error}</AlertDescription>
-          </Alert>
-        )}
-      </form>
+      </div>
       <div className="rounded-lg border bg-card p-6 h-[500px] overflow-y-auto">
         {state?.learningPath && state.learningPath.length > 0 ? (
           <LearningPathRoadmap steps={state.learningPath} />
