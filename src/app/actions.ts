@@ -65,7 +65,7 @@ export async function createLearningPath(
   try {
     const result: PersonalizedLearningPathOutput = await generatePersonalizedLearningPath(validatedFields.data);
     revalidatePath('/dashboard/learning-path');
-    return { learningPath: result.learningPath };
+    return { learningPath: result };
   } catch (e) {
     return { error: 'Failed to generate learning path.' };
   }

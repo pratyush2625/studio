@@ -10,7 +10,6 @@
 
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
-import { LearningPathStep } from '@/lib/types';
 
 const PersonalizedLearningPathInputSchema = z.object({
   goals: z
@@ -33,12 +32,10 @@ const LearningPathStepSchema = z.object({
   url: z.string().url().describe("A dummy URL for a relevant course. Use '#' for now."),
 });
 
-const PersonalizedLearningPathOutputSchema = z.object({
-  learningPath: z.array(LearningPathStepSchema).describe('A personalized learning path for the student, broken down into a roadmap of steps.'),
-});
-export type PersonalizedLearningPathOutput = {
-  learningPath: LearningPathStep[];
-};
+const PersonalizedLearningPathOutputSchema = z.array(LearningPathStepSchema).describe('A personalized learning path for the student, broken down into a roadmap of steps.');
+
+export type PersonalizedLearningPathOutput = z.infer<typeof PersonalizedLearningPathOutputSchema>;
+
 
 export async function generatePersonalizedLearningPath(
   input: PersonalizedLearningPathInput
@@ -58,7 +55,7 @@ Student Goals: {{{goals}}}
 Current Skill Level: {{{currentSkillLevel}}}
 Learning History: {{{learningHistory}}}
 
-Generate the learning path in the requested JSON format.`,
+Generate the learning path in the requested JSON format. The output should be an array of learning path steps.`,
 });
 
 const personalizedLearningPathFlow = ai.defineFlow(
