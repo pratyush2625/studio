@@ -73,6 +73,9 @@ export async function createLearningPath(
     return { learningPath: structuredResult };
   } catch (e: any) {
     console.error(e);
+    if (typeof e.message === 'string' && e.message.includes('503')) {
+      return { error: 'The AI model is currently overloaded. Please try again in a few moments.' };
+    }
     return { error: e.message || 'Failed to generate learning path.' };
   }
 }
