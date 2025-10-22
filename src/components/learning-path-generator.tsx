@@ -48,10 +48,7 @@ export function LearningPathGenerator() {
       </form>
       <div className="rounded-lg border bg-card p-6 h-[500px] overflow-y-auto">
         {state?.learningPath && state.learningPath.length > 0 ? (
-           <div>
-            <h3 className="font-headline text-xl mb-4">Your Personalized Path</h3>
-            <LearningPathRoadmap steps={state.learningPath} />
-          </div>
+          <LearningPathRoadmap steps={state.learningPath} />
         ) : (
           <div className="flex flex-col items-center justify-center h-full text-center">
             <Lightbulb className="h-12 w-12 text-muted-foreground" />
