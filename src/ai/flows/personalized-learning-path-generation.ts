@@ -32,7 +32,7 @@ const LearningPathStepSchema = z.object({
   url: z.string().url().describe("A dummy URL for a relevant course. Use '#' for now."),
 });
 
-const PersonalizedLearningPathOutputSchema = z.array(LearningPathStepSchema).describe('A personalized learning path for the student, broken down into a roadmap of steps.');
+const PersonalizedLearningPathOutputSchema = z.array(LearningPathStepSchema);
 
 export type PersonalizedLearningPathOutput = z.infer<typeof PersonalizedLearningPathOutputSchema>;
 
@@ -66,6 +66,6 @@ const personalizedLearningPathFlow = ai.defineFlow(
   },
   async input => {
     const {output} = await personalizedLearningPathPrompt(input);
-    return output!;
+    return output || [];
   }
 );
