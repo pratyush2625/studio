@@ -1,6 +1,6 @@
 'use client';
 
-import { useFormState, useFormStatus } from 'react-dom';
+import { useActionState, useFormStatus } from 'react';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
@@ -18,7 +18,7 @@ function SubmitButton() {
 }
 
 export function SentimentAnalyzer() {
-  const [state, formAction] = useFormState(analyzeSentiment, undefined);
+  const [state, formAction] = useActionState(analyzeSentiment, undefined);
   const formRef = useRef<HTMLFormElement>(null);
 
   useEffect(() => {

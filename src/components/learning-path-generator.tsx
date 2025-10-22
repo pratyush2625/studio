@@ -1,6 +1,6 @@
 'use client';
 
-import { useFormState, useFormStatus } from 'react-dom';
+import { useActionState, useFormStatus } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -20,7 +20,7 @@ function SubmitButton() {
 }
 
 export function LearningPathGenerator() {
-  const [state, formAction] = useFormState(createLearningPath, undefined);
+  const [state, formAction] = useActionState(createLearningPath, undefined);
 
   return (
     <div className="grid md:grid-cols-2 gap-8">

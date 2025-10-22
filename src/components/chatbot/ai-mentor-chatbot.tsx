@@ -1,6 +1,6 @@
 'use client';
 
-import { useFormState, useFormStatus } from 'react-dom';
+import { useActionState, useFormStatus } from 'react';
 import { useEffect, useRef, useState } from 'react';
 import { Bot, Send, User, X, Loader } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -28,7 +28,7 @@ function SubmitButton() {
 export function AIMentorChatbot() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [open, setOpen] = useState(false);
-  const [state, formAction] = useFormState(getMentorResponse, undefined);
+  const [state, formAction] = useActionState(getMentorResponse, undefined);
   const formRef = useRef<HTMLFormElement>(null);
   const scrollAreaRef = useRef<HTMLDivElement>(null);
 
