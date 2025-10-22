@@ -2,21 +2,33 @@
 
 /**
  * @fileOverview Generates personalized learning paths for students based on their goals.
- *
- * - generatePersonalizedLearningPath - A function that generates personalized learning paths.
- * - PersonalizedLearningPathInput - The input type for the generatePersonalizedLearningPath function.
- * - PersonalizedLearningPathOutput - The return type for the generatePersonalizedLearningPath function.
+ * This file now contains a two-step process:
+ * 1. generatePersonalizedLearningPath: Generates a text-based learning path.
+ * 2. convertTextToLearningPath: Converts the text path into a structured JSON format.
  */
 
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
 
-const PersonalizedLearningPathInputSchema = z.object({
+// Step 1: Input and Output for Text Generation
+const PersonalizedLearningPathTextInputSchema = z.object({
   goals: z
     .string()
     .describe('The student’s learning goals (e.g., become a data scientist).'),
 });
-export type PersonalizedLearningPathInput = z.infer<typeof PersonalizedLearningPathInputSchema>;
+export type PersonalizedLearningPathTextInput = z.infer<typeof PersonalizedLearningPathTextInputSchema>;
+
+const PersonalizedLearningPathTextOutputSchema = z.object({
+    text: z.string().describe("The generated learning path as a structured text.")
+});
+export type PersonalizedLearningPathTextOutput = z.infer<typeof PersonalizedLearningPathTextOutputSchema>;
+
+
+// Step 2: Input and Output for JSON Conversion
+const ConvertTextToLearningPathInputSchema = z.object({
+    learningPathText: z.string().describe("The text-based learning path to convert.")
+});
+export type ConvertTextToLearningPathInput = z.infer<typeof ConvertTextToLearningPathInputSchema>;
 
 const LearningPathStepSchema = z.object({
   step: z.number().describe('The step number in the learning path.'),
@@ -25,34 +37,65 @@ const LearningPathStepSchema = z.object({
   resources: z.array(z.string()).describe('A list of example projects or resources to practice the skill.'),
   url: z.string().url().describe("A dummy URL for a relevant course. Use '#' for now."),
 });
-
 const PersonalizedLearningPathOutputSchema = z.array(LearningPathStepSchema);
-
 export type PersonalizedLearningPathOutput = z.infer<typeof PersonalizedLearningPathOutputSchema>;
 
 
+// ~~~~~~~~~~~~~~~~~~ AI Flows ~~~~~~~~~~~~~~~~~~
+
+// Flow 1: Generate Text
 export async function generatePersonalizedLearningPath(
-  input: PersonalizedLearningPathInput
-): Promise<PersonalizedLearningPathOutput> {
-  return personalizedLearningPathFlow(input);
+  input: PersonalizedLearningPathTextInput
+): Promise<PersonalizedLearningPathTextOutput> {
+  return personalizedLearningPathTextFlow(input);
 }
 
-const personalizedLearningPathPrompt = ai.definePrompt({
-  name: 'personalizedLearningPathPrompt',
-  input: {schema: PersonalizedLearningPathInputSchema},
-  output: {schema: PersonalizedLearningPathOutputSchema},
-  prompt: `You are an expert AI that generates structured, step-by-step learning roadmaps for students based on their goals.
-
-Your response MUST be a valid JSON array of objects, where each object represents a step in the learning path.
-
-For each step, you must provide:
-- A step number.
-- A clear title.
-- A detailed description of the concepts to learn and how to apply them.
-- A list of practical resources or small project ideas.
-- A dummy URL ('#') for a course link.
+const textGenerationPrompt = ai.definePrompt({
+  name: 'personalizedLearningPathTextPrompt',
+  input: {schema: PersonalizedLearningPathTextInputSchema},
+  output: {schema: PersonalizedLearningPathTextOutputSchema},
+  prompt: `You are an expert AI that generates structured, step-by-step learning roadmaps for students based on their goals. Create a detailed, multi-step roadmap. For each step, provide a clear title, a detailed description of the concepts, and a list of practical resources or project ideas.
 
 Student Goals: {{{goals}}}
+
+Generate the learning path as a clear, well-formatted text.
+`,
+});
+
+const personalizedLearningPathTextFlow = ai.defineFlow(
+  {
+    name: 'personalizedLearningPathTextFlow',
+    inputSchema: PersonalizedLearningPathTextInputSchema,
+    outputSchema: PersonalizedLearningPathTextOutputSchema,
+  },
+  async input => {
+    const {output} = await textGenerationPrompt(input);
+    return output!;
+  }
+);
+
+
+// Flow 2: Convert Text to JSON
+export async function convertTextToLearningPath(
+  input: ConvertTextToLearningPathInput
+): Promise<PersonalizedLearningPathOutput> {
+  return textToJsonFlow(input);
+}
+
+const textToJsonPrompt = ai.definePrompt({
+  name: 'textToJsonPrompt',
+  input: {schema: ConvertTextToLearningPathInputSchema},
+  output: {schema: PersonalizedLearningPathOutputSchema},
+  prompt: `You are a data formatting expert. Your sole purpose is to convert the following text-based learning path into a structured JSON array of objects.
+
+Your response MUST be only the valid JSON array of objects, where each object represents a step in the learning path.
+
+For each step, you must extract:
+- A step number.
+- A clear title.
+- A detailed description.
+- A list of resources/projects.
+- A dummy URL ('#') for a course link.
 
 Here is an example of the required JSON output format:
 [
@@ -72,17 +115,21 @@ Here is an example of the required JSON output format:
   }
 ]
 
-Now, generate the complete, multi-step learning path based on the student's goals in the specified JSON format. Your entire response must be only the JSON array.`,
+Now, convert the following text into the specified JSON format. Your entire response must be only the JSON array.
+
+Learning Path Text:
+{{{learningPathText}}}
+`,
 });
 
-const personalizedLearningPathFlow = ai.defineFlow(
+const textToJsonFlow = ai.defineFlow(
   {
-    name: 'personalizedLearningPathFlow',
-    inputSchema: PersonalizedLearningPathInputSchema,
+    name: 'textToJsonFlow',
+    inputSchema: ConvertTextToLearningPathInputSchema,
     outputSchema: PersonalizedLearningPathOutputSchema,
   },
   async input => {
-    const {output} = await personalizedLearningPathPrompt(input);
+    const {output} = await textToJsonPrompt(input);
     return output || [];
   }
 );

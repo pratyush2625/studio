@@ -2,7 +2,7 @@
 
 import { z } from 'zod';
 import { aiMentorChatbotAssistance } from '@/ai/flows/ai-mentor-chatbot-assistance';
-import { generatePersonalizedLearningPath, PersonalizedLearningPathOutput } from '@/ai/flows/personalized-learning-path-generation';
+import { generatePersonalizedLearningPath, convertTextToLearningPath } from '@/ai/flows/personalized-learning-path-generation';
 import { adjustLearningContent } from '@/ai/flows/sentiment-based-learning-adjustment';
 import { revalidatePath } from 'next/cache';
 import { LearningPathStep } from '@/lib/types';
@@ -59,11 +59,21 @@ export async function createLearningPath(
   }
 
   try {
-    const result: PersonalizedLearningPathOutput = await generatePersonalizedLearningPath(validatedFields.data);
+    // Step 1: Generate the raw text-based learning path
+    const textResult = await generatePersonalizedLearningPath(validatedFields.data);
+
+    if (!textResult.text) {
+      return { error: 'Failed to generate initial learning path text.' };
+    }
+
+    // Step 2: Convert the text into a structured JSON format
+    const structuredResult = await convertTextToLearningPath({ learningPathText: textResult.text });
+    
     revalidatePath('/dashboard/learning-path');
-    return { learningPath: result };
-  } catch (e) {
-    return { error: 'Failed to generate learning path.' };
+    return { learningPath: structuredResult };
+  } catch (e: any) {
+    console.error(e);
+    return { error: e.message || 'Failed to generate learning path.' };
   }
 }
 
