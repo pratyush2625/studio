@@ -1,7 +1,7 @@
 'use server';
 
 /**
- * @fileOverview Generates personalized learning paths for students based on their goals, skill level, and learning history.
+ * @fileOverview Generates personalized learning paths for students based on their goals.
  *
  * - generatePersonalizedLearningPath - A function that generates personalized learning paths.
  * - PersonalizedLearningPathInput - The input type for the generatePersonalizedLearningPath function.
@@ -15,12 +15,6 @@ const PersonalizedLearningPathInputSchema = z.object({
   goals: z
     .string()
     .describe('The student’s learning goals (e.g., become a data scientist).'),
-  currentSkillLevel: z
-    .string()
-    .describe('The student’s current skill level in relevant areas (e.g., beginner, intermediate, advanced).'),
-  learningHistory: z
-    .string()
-    .describe('A summary of the student’s previous learning experiences and preferences.'),
 });
 export type PersonalizedLearningPathInput = z.infer<typeof PersonalizedLearningPathInputSchema>;
 
@@ -47,13 +41,11 @@ const personalizedLearningPathPrompt = ai.definePrompt({
   name: 'personalizedLearningPathPrompt',
   input: {schema: PersonalizedLearningPathInputSchema},
   output: {schema: PersonalizedLearningPathOutputSchema},
-  prompt: `You are an AI learning path generator. Generate a structured, step-by-step roadmap for a student based on their goals, skill level, and learning history.
+  prompt: `You are an AI learning path generator. Generate a structured, step-by-step roadmap for a student based on their goals.
 
 For each step, provide a clear title, a detailed description of the concepts to learn and how to apply them, a list of practical resources or small project ideas, and a dummy URL ('#') for a course link.
 
 Student Goals: {{{goals}}}
-Current Skill Level: {{{currentSkillLevel}}}
-Learning History: {{{learningHistory}}}
 
 Generate the learning path in the requested JSON format. The output should be an array of learning path steps.`,
 });

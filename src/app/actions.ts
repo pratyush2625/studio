@@ -39,8 +39,6 @@ export async function getMentorResponse(
 // Personalized Learning Path Action
 const learningPathSchema = z.object({
   goals: z.string().min(1, 'Goals are required.'),
-  currentSkillLevel: z.string().min(1, 'Skill level is required.'),
-  learningHistory: z.string().min(1, 'Learning history is required.'),
 });
 
 type LearningPathState = {
@@ -54,8 +52,6 @@ export async function createLearningPath(
 ): Promise<LearningPathState> {
   const validatedFields = learningPathSchema.safeParse({
     goals: formData.get('goals'),
-    currentSkillLevel: formData.get('currentSkillLevel'),
-    learningHistory: formData.get('learningHistory'),
   });
 
   if (!validatedFields.success) {
