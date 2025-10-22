@@ -26,4 +26,5 @@ export type LearningPathStep = {
   title: string;
   description: string;
   resources: string[];
+  url: string;
 };

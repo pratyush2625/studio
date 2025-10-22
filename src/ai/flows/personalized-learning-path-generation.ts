@@ -30,6 +30,7 @@ const LearningPathStepSchema = z.object({
   title: z.string().describe('The title of this step.'),
   description: z.string().describe('A detailed description of what to learn in this step, including how to use the skill.'),
   resources: z.array(z.string()).describe('A list of example projects or resources to practice the skill.'),
+  url: z.string().url().describe("A dummy URL for a relevant course. Use '#' for now."),
 });
 
 const PersonalizedLearningPathOutputSchema = z.object({
@@ -51,7 +52,7 @@ const personalizedLearningPathPrompt = ai.definePrompt({
   output: {schema: PersonalizedLearningPathOutputSchema},
   prompt: `You are an AI learning path generator. Generate a structured, step-by-step roadmap for a student based on their goals, skill level, and learning history.
 
-For each step, provide a clear title, a detailed description of the concepts to learn and how to apply them, and a list of practical resources or small project ideas.
+For each step, provide a clear title, a detailed description of the concepts to learn and how to apply them, a list of practical resources or small project ideas, and a dummy URL ('#') for a course link.
 
 Student Goals: {{{goals}}}
 Current Skill Level: {{{currentSkillLevel}}}
