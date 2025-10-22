@@ -3,60 +3,61 @@
     {
       "id": "course-react",
       "description": "Abstract visualization of React components",
-      "imageUrl": "https://picsum.photos/seed/react/600/400",
+      "imageUrl": "https://images.unsplash.com/photo-1652147896498-aae326bcbfb9?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHxyZWFjdCUyMGNvbXBvbmVudHN8ZW58MHx8fHwxNzYxMTE0NDkyfDA&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "react components"
     },
     {
       "id": "course-python",
       "description": "Python logo with data science background",
-      "imageUrl": "https://picsum.photos/seed/python/600/400",
+      "imageUrl": "https://images.unsplash.com/photo-1515879218367-8466d910aaa4?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxweXRob24lMjBkYXRhfGVufDB8fHx8MTc2MTExNDQ5Mnww&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "python data"
     },
     {
       "id": "course-ml",
       "description": "Neural network visualization",
-      "imageUrl": "https://picsum.photos/seed/ml/600/400",
+      "imageUrl": "https://images.unsplash.com/photo-1637715863105-83fe44b5992f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHxuZXVyYWwlMjBuZXR3b3JrfGVufDB8fHx8MTc2MTA2MDg2OHww&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "neural network"
     },
     {
       "id": "course-ds",
       "description": "Data structures and algorithms visualization",
-      "imageUrl": "https://picsum.photos/seed/ds/600/400",
+      "imageUrl": "https://images.unsplash.com/photo-1750020113720-70f9c87982e9?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHxkYXRhJTIwc3RydWN0dXJlc3xlbnwwfHx8fDE3NjEwMzkzODl8MA&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "data structures"
     },
     {
       "id": "course-ux",
       "description": "User experience design wireframes",
-      "imageUrl": "https://picsum.photos/seed/ux/600/400",
+      "imageUrl": "https://images.unsplash.com/photo-1618788372246-79faff0c3742?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHx1eCUyMHdpcmVmcmFtZXxlbnwwfHx8fDE3NjExMTQ0OTJ8MA&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "ux wireframe"
     },
-    {iec_id":"course-node",
+    {
+      "id": "course-node",
       "description": "Node.js server code on a screen",
-      "imageUrl": "https://picsum.photos/seed/node/600/400",
+      "imageUrl": "https://images.unsplash.com/photo-1667372459567-3853510dd5ce?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxzZXJ2ZXIlMjBjb2RlfGVufDB8fHx8MTc2MTAyMzgwN3ww&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "server code"
     },
     {
       "id": "project-1",
       "description": "A dashboard for a web application",
-      "imageUrl": "https://picsum.photos/seed/proj1/600/400",
+      "imageUrl": "https://images.unsplash.com/photo-1677617587258-685aaf1b1e1c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHxkYXNoYm9hcmQlMjB1aXxlbnwwfHx8fDE3NjEwNDMyODF8MA&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "dashboard ui"
     },
     {
       "id": "project-2",
       "description": "A mobile application interface",
-      "imageUrl": "https://picsum.photos/seed/proj2/600/400",
+      "imageUrl": "https://images.unsplash.com/photo-1480694313141-fce5e697ee25?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHxtb2JpbGUlMjBhcHB8ZW58MHx8fHwxNzYxMDc2ODI3fDA&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "mobile app"
     },
     {
       "id": "project-3",
       "description": "E-commerce website design",
-      "imageUrl": "https://picsum.photos/seed/proj3/600/400",
+      "imageUrl": "https://images.unsplash.com/photo-1499951360447-b19be8fe80f5?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw5fHxlY29tbWVyY2UlMjB3ZWJzaXRlfGVufDB8fHx8MTc2MTA2Mjc1Nnww&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "ecommerce website"
     },
     {
       "id": "avatar",
       "description": "Portrait of a smiling student",
-      "imageUrl": "https://picsum.photos/seed/avatar1/100/100",
+      "imageUrl": "https://images.unsplash.com/photo-1631131428332-fa2ae83a84be?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxzbWlsaW5nJTIwc3R1ZGVudHxlbnwwfHx8fDE3NjExMTQ0OTJ8MA&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "smiling student"
     }
   ]
