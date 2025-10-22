@@ -1,3 +1,63 @@
 {
-  "placeholderImages": []
+  "placeholderImages": [
+    {
+      "id": "course-react",
+      "description": "Abstract visualization of React components",
+      "imageUrl": "https://picsum.photos/seed/react/600/400",
+      "imageHint": "react components"
+    },
+    {
+      "id": "course-python",
+      "description": "Python logo with data science background",
+      "imageUrl": "https://picsum.photos/seed/python/600/400",
+      "imageHint": "python data"
+    },
+    {
+      "id": "course-ml",
+      "description": "Neural network visualization",
+      "imageUrl": "https://picsum.photos/seed/ml/600/400",
+      "imageHint": "neural network"
+    },
+    {
+      "id": "course-ds",
+      "description": "Data structures and algorithms visualization",
+      "imageUrl": "https://picsum.photos/seed/ds/600/400",
+      "imageHint": "data structures"
+    },
+    {
+      "id": "course-ux",
+      "description": "User experience design wireframes",
+      "imageUrl": "https://picsum.photos/seed/ux/600/400",
+      "imageHint": "ux wireframe"
+    },
+    {iec_id":"course-node",
+      "description": "Node.js server code on a screen",
+      "imageUrl": "https://picsum.photos/seed/node/600/400",
+      "imageHint": "server code"
+    },
+    {
+      "id": "project-1",
+      "description": "A dashboard for a web application",
+      "imageUrl": "https://picsum.photos/seed/proj1/600/400",
+      "imageHint": "dashboard ui"
+    },
+    {
+      "id": "project-2",
+      "description": "A mobile application interface",
+      "imageUrl": "https://picsum.photos/seed/proj2/600/400",
+      "imageHint": "mobile app"
+    },
+    {
+      "id": "project-3",
+      "description": "E-commerce website design",
+      "imageUrl": "https://picsum.photos/seed/proj3/600/400",
+      "imageHint": "ecommerce website"
+    },
+    {
+      "id": "avatar",
+      "description": "Portrait of a smiling student",
+      "imageUrl": "https://picsum.photos/seed/avatar1/100/100",
+      "imageHint": "smiling student"
+    }
+  ]
 }
