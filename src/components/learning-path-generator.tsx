@@ -1,5 +1,6 @@
 'use client';
 
+import React from 'react';
 import { useActionState } from 'react';
 import { useFormStatus } from 'react-dom';
 import { Button } from '@/components/ui/button';
@@ -7,9 +8,9 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { createLearningPath } from '@/app/actions';
-import { Alert, AlertDescription, AlertTitle } from './ui/alert';
+import { Alert, AlertDescription } from './ui/alert';
 import { Lightbulb } from 'lucide-react';
-import ReactMarkdown from 'react-markdown';
+import { LearningPathRoadmap } from './learning-path-roadmap';
 
 function SubmitButton() {
   const { pending } = useFormStatus();
@@ -45,11 +46,11 @@ export function LearningPathGenerator() {
           </Alert>
         )}
       </form>
-      <div className="rounded-lg border bg-card p-6">
-        {state?.learningPath ? (
-           <div className="prose prose-sm dark:prose-invert max-w-full">
+      <div className="rounded-lg border bg-card p-6 h-[500px] overflow-y-auto">
+        {state?.learningPath && state.learningPath.length > 0 ? (
+           <div>
             <h3 className="font-headline text-xl mb-4">Your Personalized Path</h3>
-            <ReactMarkdown>{state.learningPath}</ReactMarkdown>
+            <LearningPathRoadmap steps={state.learningPath} />
           </div>
         ) : (
           <div className="flex flex-col items-center justify-center h-full text-center">

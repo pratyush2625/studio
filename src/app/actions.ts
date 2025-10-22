@@ -2,9 +2,10 @@
 
 import { z } from 'zod';
 import { aiMentorChatbotAssistance } from '@/ai/flows/ai-mentor-chatbot-assistance';
-import { generatePersonalizedLearningPath } from '@/ai/flows/personalized-learning-path-generation';
+import { generatePersonalizedLearningPath, PersonalizedLearningPathOutput } from '@/ai/flows/personalized-learning-path-generation';
 import { adjustLearningContent } from '@/ai/flows/sentiment-based-learning-adjustment';
 import { revalidatePath } from 'next/cache';
+import { LearningPathStep } from '@/lib/types';
 
 // AI Mentor Chatbot Action
 const mentorSchema = z.object({
@@ -43,7 +44,7 @@ const learningPathSchema = z.object({
 });
 
 type LearningPathState = {
-  learningPath?: string;
+  learningPath?: LearningPathStep[];
   error?: string;
 };
 
@@ -62,7 +63,7 @@ export async function createLearningPath(
   }
 
   try {
-    const result = await generatePersonalizedLearningPath(validatedFields.data);
+    const result: PersonalizedLearningPathOutput = await generatePersonalizedLearningPath(validatedFields.data);
     revalidatePath('/dashboard/learning-path');
     return { learningPath: result.learningPath };
   } catch (e) {
