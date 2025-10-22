@@ -41,13 +41,37 @@ const personalizedLearningPathPrompt = ai.definePrompt({
   name: 'personalizedLearningPathPrompt',
   input: {schema: PersonalizedLearningPathInputSchema},
   output: {schema: PersonalizedLearningPathOutputSchema},
-  prompt: `You are an AI learning path generator. Generate a structured, step-by-step roadmap for a student based on their goals.
+  prompt: `You are an expert AI that generates structured, step-by-step learning roadmaps for students based on their goals.
 
-For each step, provide a clear title, a detailed description of the concepts to learn and how to apply them, a list of practical resources or small project ideas, and a dummy URL ('#') for a course link.
+Your response MUST be a valid JSON array of objects, where each object represents a step in the learning path.
+
+For each step, provide:
+- A clear title.
+- A detailed description of the concepts to learn and how to apply them.
+- A list of practical resources or small project ideas.
+- A dummy URL ('#') for a course link.
 
 Student Goals: {{{goals}}}
 
-Generate the learning path in the requested JSON format. The output should be an array of learning path steps.`,
+Here is an example of the required JSON output format:
+[
+  {
+    "step": 1,
+    "title": "Introduction to Python",
+    "description": "Learn the fundamentals of Python programming, including data types, loops, and functions. This is the foundation for data science.",
+    "resources": ["Codecademy Python Course", "Automate the Boring Stuff with Python"],
+    "url": "#"
+  },
+  {
+    "step": 2,
+    "title": "Data Analysis with Pandas",
+    "description": "Master the Pandas library for data manipulation and analysis. Learn how to clean, transform, and visualize data.",
+    "resources": ["Pandas Documentation", "Kaggle Micro-courses"],
+    "url": "#"
+  }
+]
+
+Now, generate the complete, multi-step learning path based on the student's goals in the specified JSON format.`,
 });
 
 const personalizedLearningPathFlow = ai.defineFlow(
