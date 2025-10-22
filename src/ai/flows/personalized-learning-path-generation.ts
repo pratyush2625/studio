@@ -43,7 +43,7 @@ const personalizedLearningPathPrompt = ai.definePrompt({
   output: {schema: PersonalizedLearningPathOutputSchema},
   prompt: `You are an expert AI that generates structured, step-by-step learning roadmaps for students based on their goals.
 
-Your response MUST be a valid JSON array of objects, where each object represents a step in the learning path. Do not include any other text or explanation.
+Your response MUST be a valid JSON array of objects, where each object represents a step in the learning path.
 
 For each step, you must provide:
 - A step number.
