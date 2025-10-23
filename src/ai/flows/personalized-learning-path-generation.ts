@@ -35,7 +35,7 @@ const LearningPathStepSchema = z.object({
   title: z.string().describe('The title of this step.'),
   description: z.string().describe('A detailed description of what to learn in this step, including how to use the skill.'),
   resources: z.array(z.string()).describe('A list of example projects or resources to practice the skill.'),
-  url: z.string().url().describe("A dummy URL for a relevant course. Use '#' for now."),
+  url: z.string().describe("A dummy URL for a relevant course. Use '#' for now."),
 });
 const PersonalizedLearningPathOutputSchema = z.array(LearningPathStepSchema);
 export type PersonalizedLearningPathOutput = z.infer<typeof PersonalizedLearningPathOutputSchema>;
