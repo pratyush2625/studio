@@ -13,8 +13,8 @@ import {
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
-} from '@/components/ui/chart';
-import { userSkills } from '@/lib/data';
+} from '../ui/chart';
+import { userSkills } from '../../lib/data';
 
 const chartConfig = {
   level: {

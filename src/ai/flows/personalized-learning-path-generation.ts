@@ -7,7 +7,7 @@
  * 2. convertTextToLearningPath: Converts the text path into a structured JSON format.
  */
 
-import {ai} from '@/ai/genkit';
+import {ai} from '../genkit';
 import {z} from 'genkit';
 
 // Step 1: Input and Output for Text Generation

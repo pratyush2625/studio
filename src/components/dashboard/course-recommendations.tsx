@@ -1,8 +1,8 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
-import { recommendedCourses } from "@/lib/data"
-import { Button } from "@/components/ui/button"
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card"
+import { recommendedCourses } from "../../lib/data"
+import { Button } from "../ui/button"
+import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "../ui/card"
 import { CourseCard } from "../courses/course-card";
 
 export function CourseRecommendations() {

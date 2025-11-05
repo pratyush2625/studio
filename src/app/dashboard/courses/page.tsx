@@ -1,8 +1,8 @@
-import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { allCourses } from "@/lib/data";
-import { CourseCard } from "@/components/courses/course-card";
-import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Card, CardDescription, CardHeader, CardTitle } from "../../../components/ui/card";
+import { allCourses } from "../../../lib/data";
+import { CourseCard } from "../../../components/courses/course-card";
+import { Input } from "../../../components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../../../components/ui/select";
 
 export default function CoursesPage() {
   return (

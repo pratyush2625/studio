@@ -1,7 +1,7 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { SkillGraph } from "@/components/dashboard/skill-graph"
-import { SentimentAnalyzer } from "@/components/dashboard/sentiment-analyzer"
-import { CourseRecommendations } from "@/components/dashboard/course-recommendations"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../../components/ui/card"
+import { SkillGraph } from "../../components/dashboard/skill-graph"
+import { SentimentAnalyzer } from "../../components/dashboard/sentiment-analyzer"
+import { CourseRecommendations } from "../../components/dashboard/course-recommendations"
 
 export default function DashboardPage() {
   return (

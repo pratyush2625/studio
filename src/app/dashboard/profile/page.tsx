@@ -1,6 +1,6 @@
 import Image from 'next/image';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
+import { Badge } from '../../../components/ui/badge';
+import { Button } from '../../../components/ui/button';
 import {
   Card,
   CardContent,
@@ -8,12 +8,12 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from '@/components/ui/card';
-import { Progress } from '@/components/ui/progress';
-import { Separator } from '@/components/ui/separator';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { PlaceHolderImages } from '@/lib/placeholder-images';
-import { userSkills, userProjects } from '@/lib/data';
+} from '../../../components/ui/card';
+import { Progress } from '../../../components/ui/progress';
+import { Separator } from '../../../components/ui/separator';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../../components/ui/tabs';
+import { PlaceHolderImages } from '../../../lib/placeholder-images';
+import { userSkills, userProjects } from '../../../lib/data';
 import { Github, Linkedin, Twitter, Share2 } from 'lucide-react';
 import Link from 'next/link';
 

@@ -1,4 +1,4 @@
-import type { Course, Skill, Project } from '@/lib/types';
+import type { Course, Skill, Project } from './types';
 
 export const userSkills: Skill[] = [
   { name: 'React', level: 75 },

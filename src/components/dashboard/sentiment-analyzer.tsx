@@ -2,10 +2,10 @@
 
 import { useActionState } from 'react';
 import { useFormStatus } from 'react-dom';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { Button } from '@/components/ui/button';
-import { Textarea } from '@/components/ui/textarea';
-import { analyzeSentiment } from '@/app/actions';
+import { Alert, AlertDescription, AlertTitle } from '../ui/alert';
+import { Button } from '../ui/button';
+import { Textarea } from '../ui/textarea';
+import { analyzeSentiment } from '../../app/actions';
 import { Smile, Frown, Meh } from 'lucide-react';
 import { useEffect, useRef } from 'react';
 

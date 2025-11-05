@@ -1,6 +1,6 @@
-import { Header } from '@/components/layout/header';
-import { SidebarNav } from '@/components/layout/sidebar-nav';
-import { AIMentorChatbot } from '@/components/chatbot/ai-mentor-chatbot';
+import { Header } from '../../components/layout/header';
+import { SidebarNav } from '../../components/layout/sidebar-nav';
+import { AIMentorChatbot } from '../../components/chatbot/ai-mentor-chatbot';
 
 export default function DashboardLayout({
   children,

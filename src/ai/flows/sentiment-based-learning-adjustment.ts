@@ -8,7 +8,7 @@
  * - SentimentBasedLearningAdjustmentOutput - The return type for adjustLearningContent.
  */
 
-import {ai} from '@/ai/genkit';
+import {ai} from '../genkit';
 import {z} from 'genkit';
 
 const SentimentBasedLearningAdjustmentInputSchema = z.object({

@@ -4,11 +4,11 @@ import { useActionState } from 'react';
 import { useFormStatus } from 'react-dom';
 import { useEffect, useRef, useState } from 'react';
 import { Bot, Send, User, X, Loader } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
-import { getMentorResponse } from '@/app/actions';
+import { Button } from '../ui/button';
+import { Input } from '../ui/input';
+import { ScrollArea } from '../ui/scroll-area';
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '../ui/sheet';
+import { getMentorResponse } from '../../app/actions';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 
 interface Message {

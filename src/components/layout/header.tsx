@@ -5,12 +5,14 @@ import { usePathname } from 'next/navigation';
 import Image from 'next/image';
 import {
   BookOpen,
+  Briefcase,
+  CalendarDays,
   GraduationCap,
   LayoutDashboard,
   Menu,
   User,
 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Button } from '../ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -18,10 +20,10 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { Logo } from '@/components/icons';
-import { PlaceHolderImages } from '@/lib/placeholder-images';
+} from '../ui/dropdown-menu';
+import { Sheet, SheetContent, SheetTrigger } from '../ui/sheet';
+import { Logo } from '../icons';
+import { PlaceHolderImages } from '../../lib/placeholder-images';
 
 const navItems = [
   { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
@@ -31,6 +33,8 @@ const navItems = [
     icon: GraduationCap,
   },
   { href: '/dashboard/courses', label: 'Courses', icon: BookOpen },
+  { href: '/dashboard/events', label: 'Events', icon: CalendarDays },
+  { href: '/dashboard/portfolio', label: 'Portfolio', icon: Briefcase },
   { href: '/dashboard/profile', label: 'Profile', icon: User },
 ];
 

@@ -1,5 +1,5 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { LearningPathGenerator } from "@/components/learning-path-generator";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../../../components/ui/card";
+import { LearningPathGenerator } from "../../../components/learning-path-generator";
 
 export default function LearningPathPage() {
   return (

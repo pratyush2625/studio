@@ -4,6 +4,8 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import {
   BookOpen,
+  Briefcase,
+  CalendarDays,
   GraduationCap,
   LayoutDashboard,
   LucideIcon,
@@ -14,9 +16,9 @@ import {
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from '@/components/ui/tooltip';
-import { cn } from '@/lib/utils';
-import { Logo } from '@/components/icons';
+} from '../ui/tooltip';
+import { cn } from '../../lib/utils';
+import { Logo } from '../icons';
 
 type NavItem = {
   href: string;
@@ -32,6 +34,8 @@ const navItems: NavItem[] = [
     icon: GraduationCap,
   },
   { href: '/dashboard/courses', label: 'Courses', icon: BookOpen },
+  { href: '/dashboard/events', label: 'Events', icon: CalendarDays },
+  { href: '/dashboard/portfolio', label: 'Portfolio', icon: Briefcase },
   { href: '/dashboard/profile', label: 'Profile', icon: User },
 ];
 

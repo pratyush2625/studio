@@ -1,7 +1,7 @@
 'use client';
 
 import { Milestone } from 'lucide-react';
-import type { LearningPathStep } from '@/lib/types';
+import type { LearningPathStep } from '../lib/types';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Badge } from './ui/badge';
 import Link from 'next/link';

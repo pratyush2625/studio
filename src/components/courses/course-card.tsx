@@ -1,9 +1,9 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import type { Course } from '@/lib/types';
-import { PlaceHolderImages } from '@/lib/placeholder-images';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
+import type { Course } from '../../lib/types';
+import { PlaceHolderImages } from '../../lib/placeholder-images';
+import { Badge } from '../ui/badge';
+import { Button } from '../ui/button';
 import {
   Card,
   CardContent,
@@ -11,7 +11,7 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from '@/components/ui/card';
+} from '../ui/card';
 import { ArrowRight } from 'lucide-react';
 
 interface CourseCardProps {

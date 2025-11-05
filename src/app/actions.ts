@@ -1,11 +1,11 @@
 'use server';
 
 import { z } from 'zod';
-import { aiMentorChatbotAssistance } from '@/ai/flows/ai-mentor-chatbot-assistance';
-import { generatePersonalizedLearningPath, convertTextToLearningPath } from '@/ai/flows/personalized-learning-path-generation';
-import { adjustLearningContent } from '@/ai/flows/sentiment-based-learning-adjustment';
+import { aiMentorChatbotAssistance } from '../ai/flows/ai-mentor-chatbot-assistance';
+import { generatePersonalizedLearningPath, convertTextToLearningPath } from '../ai/flows/personalized-learning-path-generation';
+import { adjustLearningContent } from '../ai/flows/sentiment-based-learning-adjustment';
 import { revalidatePath } from 'next/cache';
-import { LearningPathStep } from '@/lib/types';
+import { LearningPathStep } from '../lib/types';
 
 // AI Mentor Chatbot Action
 const mentorSchema = z.object({
