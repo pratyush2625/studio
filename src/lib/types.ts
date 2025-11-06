@@ -28,3 +28,25 @@ export type LearningPathStep = {
   resources: string[];
   url: string;
 };
+
+export type Event = {
+  id: string;
+  title: string;
+  category: 'Hackathon' | 'Workshop' | 'Webinar' | 'Ideathon';
+  date: string;
+  description: string;
+  teamSize: { min: number; max: number };
+  imageId: string;
+  url: string;
+}
+
+export type Internship = {
+    id: string;
+    title: string;
+    company: string;
+    location: string;
+    duration: string;
+    description: string;
+    tags: string[];
+    url: string;
+}

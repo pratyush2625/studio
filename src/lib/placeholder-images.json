@@ -59,6 +59,30 @@
       "description": "Portrait of a smiling student",
       "imageUrl": "https://images.unsplash.com/photo-1631131428332-fa2ae83a84be?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxzbWlsaW5nJTIwc3R1ZGVudHxlbnwwfHx8fDE3NjExMTQ0OTJ8MA&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "smiling student"
+    },
+    {
+      "id": "event-1",
+      "imageUrl": "https://images.unsplash.com/photo-1615454782617-e69bbd4f2969?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxMHx8QUklMjBoYWNrYXRob258ZW58MHx8fHwxNzYyNDM5MzMyfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "AI hackathon",
+      "description": "People collaborating around a table with laptops"
+    },
+    {
+      "id": "event-2",
+      "imageUrl": "https://images.unsplash.com/photo-1618761714954-0b8cd0026356?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHx3ZWIlMjB3b3Jrc2hvcHxlbnwwfHx8fDE3NjI0MzkzMzJ8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "web workshop",
+      "description": "Presenter in front of a screen with code"
+    },
+    {
+      "id": "event-3",
+      "imageUrl": "https://images.unsplash.com/photo-1627544263474-c0d0b646bac5?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHxjbG91ZCUyMGlkZWFzfGVufDB8fHx8MTc2MjQzOTMzMnww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "cloud ideas",
+      "description": "Abstract representation of cloud computing and ideas"
+    },
+    {
+      "id": "event-4",
+      "imageUrl": "https://images.unsplash.com/photo-1485796826113-174aa68fd81b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxMHx8bWFjaGluZSUyMGxlYXJuaW5nfGVufDB8fHx8MTc2MjQwMjkwOHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "machine learning",
+      "description": "Visualization of a machine learning model"
     }
   ]
 }
