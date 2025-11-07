@@ -15,6 +15,9 @@ import {
   FileDown,
   Plus,
   Trash2,
+  Copy,
+  Upload,
+  Link as LinkIcon,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -22,7 +25,9 @@ import { Label } from '@/components/ui/label';
 import {
   Card,
   CardContent,
+  CardDescription,
   CardHeader,
+  CardTitle,
 } from '@/components/ui/card';
 import {
   Select,
@@ -37,6 +42,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { ClassicTemplate } from '@/components/portfolio/classic-template';
 import { ModernTemplate } from '@/components/portfolio/modern-template';
 import { MinimalTemplate } from '@/components/portfolio/minimal-template';
+import { Separator } from '@/components/ui/separator';
 
 const resumeSections = [
   { name: 'Personal Info', icon: User },
@@ -225,6 +231,8 @@ export default function PortfolioPage() {
       pdf.save('resume.pdf');
     });
   };
+
+  const portfolioUrl = `https://skillgraph.io/${name.toLowerCase().replace(/\s/g, '-')}`;
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 h-full">
@@ -562,6 +570,35 @@ export default function PortfolioPage() {
                 </div>
               </div>
             )}
+
+            <Separator className="my-8" />
+            
+            <div>
+                <h2 className="text-2xl font-semibold">Build a Public Portfolio</h2>
+                <p className="text-muted-foreground mt-2 text-sm">
+                    Generate a shareable public portfolio page based on the information you&apos;ve provided.
+                </p>
+                <Card className="mt-4 bg-secondary/30">
+                    <CardContent className="p-4 flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                            <LinkIcon className="h-5 w-5 text-primary" />
+                            <Link href={portfolioUrl} target="_blank" className="font-mono text-sm hover:underline">
+                                {portfolioUrl}
+                            </Link>
+                        </div>
+                        <div className='flex gap-2'>
+                           <Button variant="outline" size="sm">
+                                <Copy className="h-4 w-4 mr-2"/>
+                                Copy Link
+                            </Button>
+                            <Button size="sm">
+                                <Upload className="h-4 w-4 mr-2"/>
+                                Publish
+                            </Button>
+                        </div>
+                    </CardContent>
+                </Card>
+            </div>
             
           </CardContent>
         </Card>
@@ -598,3 +635,5 @@ export default function PortfolioPage() {
     </div>
   );
 }
+
+    
