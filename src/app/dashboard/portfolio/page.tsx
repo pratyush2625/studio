@@ -34,6 +34,9 @@ import {
 import { Badge } from '@/components/ui/badge';
 import Link from 'next/link';
 import { Textarea } from '@/components/ui/textarea';
+import { ClassicTemplate } from '@/components/portfolio/classic-template';
+import { ModernTemplate } from '@/components/portfolio/modern-template';
+import { MinimalTemplate } from '@/components/portfolio/minimal-template';
 
 const resumeSections = [
   { name: 'Personal Info', icon: User },
@@ -45,15 +48,30 @@ const resumeSections = [
 ];
 
 // Type Definitions
-type SocialLink = { platform: string; url: string };
-type Education = { institute: string; degree: string; startYear: string; endYear: string; gpa: string };
-type Experience = { company: string; title: string; duration: string; description: string };
-type Project = { name: string; tech: string; link: string; description: string };
-type Certification = { title: string; provider: string; date: string };
+export type SocialLink = { platform: string; url: string };
+export type Education = { institute: string; degree: string; startYear: string; endYear: string; gpa: string };
+export type Experience = { company: string; title: string; duration: string; description: string };
+export type Project = { name: string; tech: string; link: string; description: string };
+export type Certification = { title: string; provider: string; date: string };
+export type ResumeData = {
+    name: string;
+    headline: string;
+    email: string;
+    phone: string;
+    location: string;
+    socialLinks: SocialLink[];
+    technicalSkills: string[];
+    languages: string[];
+    educationEntries: Education[];
+    experienceEntries: Experience[];
+    projectEntries: Project[];
+    certificationEntries: Certification[];
+}
 
 
 export default function PortfolioPage() {
   const [activeSection, setActiveSection] = useState('Personal Info');
+  const [template, setTemplate] = useState('classic');
 
   // --- State for all sections ---
   const [name, setName] = useState('Kshatriya Pratyush Singh');
@@ -156,7 +174,12 @@ export default function PortfolioPage() {
     }
   };
   const handleRemoveCertification = (index: number) => setCertificationEntries(certificationEntries.filter((_, i) => i !== index));
-
+  
+  const resumeData: ResumeData = {
+    name, headline, email, phone, location, socialLinks,
+    technicalSkills, languages, educationEntries, experienceEntries,
+    projectEntries, certificationEntries
+  }
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 h-full">
@@ -503,7 +526,7 @@ export default function PortfolioPage() {
       <div className="lg:col-span-4">
         <Card className="sticky top-6">
           <CardHeader className="flex flex-row items-center justify-between">
-            <Select defaultValue="classic">
+            <Select value={template} onValueChange={setTemplate}>
               <SelectTrigger className="w-[180px]">
                 <SelectValue placeholder="Select a template" />
               </SelectTrigger>
@@ -519,123 +542,12 @@ export default function PortfolioPage() {
             </Button>
           </CardHeader>
           <CardContent className="h-[70vh] bg-secondary/30 rounded-b-lg p-6 overflow-y-auto">
-            <div className="bg-white p-8 rounded-lg shadow-md h-full text-sm">
-                <h3 className="text-xl font-bold">{name}</h3>
-                <p className="text-muted-foreground mt-1">{headline}</p>
-                <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-muted-foreground mt-2">
-                    <span>{location}</span>
-                    <span>{phone}</span>
-                    <span>{email}</span>
-                    {socialLinks.map(link => (
-                      <a key={link.platform} href={link.url} target="_blank" rel="noreferrer" className="text-primary hover:underline">{link.url}</a>
-                    ))}
-                </div>
-
-                <div className="mt-6">
-                    <h4 className="font-bold text-primary text-xs tracking-widest uppercase">Skills & Languages</h4>
-                    <div className="w-full h-px bg-border my-2"></div>
-                    <div className="grid grid-cols-2 gap-4">
-                        <div>
-                            <p className="font-semibold">Technical Skills</p>
-                            <div className="flex flex-wrap gap-2 mt-2">
-                                {technicalSkills.map((skill, index) => (
-                                    <Badge key={index} variant="outline">{skill}</Badge>
-                                ))}
-                            </div>
-                        </div>
-                        <div>
-                            <p className="font-semibold">Languages</p>
-                            <div className="flex flex-wrap gap-2 mt-2">
-                                {languages.map((lang, index) => (
-                                    <Badge key={index} variant="outline">{lang}</Badge>
-                                ))}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                {educationEntries.length > 0 && (
-                <div className="mt-6">
-                    <h4 className="font-bold text-primary text-xs tracking-widest uppercase">Education</h4>
-                    <div className="w-full h-px bg-border my-2"></div>
-                    <div className="space-y-3">
-                        {educationEntries.map((entry, index) => (
-                            <div key={index}>
-                                <div className="flex justify-between items-baseline">
-                                    <h5 className="font-semibold">{entry.institute}</h5>
-                                    <p className="text-xs text-muted-foreground">{entry.startYear} - {entry.endYear}</p>
-                                </div>
-                                <p className="text-muted-foreground">{entry.degree}</p>
-                                {entry.gpa && <p className="text-xs text-muted-foreground">GPA: {entry.gpa}</p>}
-                            </div>
-                        ))}
-                    </div>
-                </div>
-                )}
-                
-                {experienceEntries.length > 0 && (
-                <div className="mt-6">
-                    <h4 className="font-bold text-primary text-xs tracking-widest uppercase">Experience</h4>
-                    <div className="w-full h-px bg-border my-2"></div>
-                    <div className="space-y-3">
-                        {experienceEntries.map((entry, index) => (
-                            <div key={index}>
-                                <div className="flex justify-between items-baseline">
-                                    <h5 className="font-semibold">{entry.title}</h5>
-                                    <p className="text-xs text-muted-foreground">{entry.duration}</p>
-                                </div>
-                                <p className="font-medium text-muted-foreground">{entry.company}</p>
-                                <p className="text-xs text-muted-foreground mt-1 whitespace-pre-wrap">{entry.description}</p>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-                )}
-
-                {projectEntries.length > 0 && (
-                <div className="mt-6">
-                    <h4 className="font-bold text-primary text-xs tracking-widest uppercase">Projects</h4>
-                    <div className="w-full h-px bg-border my-2"></div>
-                    <div className="space-y-3">
-                        {projectEntries.map((entry, index) => (
-                            <div key={index}>
-                                <div className="flex justify-between items-baseline">
-                                    <h5 className="font-semibold">{entry.name}</h5>
-                                    <a href={entry.link} target="_blank" rel="noreferrer" className="text-xs text-primary hover:underline">View Project</a>
-                                </div>
-                                <p className="text-sm text-muted-foreground">{entry.tech}</p>
-                                <p className="text-xs text-muted-foreground mt-1 whitespace-pre-wrap">{entry.description}</p>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-                )}
-
-                {certificationEntries.length > 0 && (
-                <div className="mt-6">
-                    <h4 className="font-bold text-primary text-xs tracking-widest uppercase">Certifications</h4>
-                    <div className="w-full h-px bg-border my-2"></div>
-                    <div className="space-y-3">
-                        {certificationEntries.map((entry, index) => (
-                            <div key={index}>
-                                <div className="flex justify-between items-baseline">
-                                    <h5 className="font-semibold">{entry.title}</h5>
-                                    <p className="text-xs text-muted-foreground">{entry.date}</p>
-                                </div>
-                                <p className="text-muted-foreground">{entry.provider}</p>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-                )}
-
-
-            </div>
+            {template === 'classic' && <ClassicTemplate {...resumeData} />}
+            {template === 'modern' && <ModernTemplate {...resumeData} />}
+            {template === 'minimal' && <MinimalTemplate {...resumeData} />}
           </CardContent>
         </Card>
       </div>
     </div>
   );
 }
-
-    
