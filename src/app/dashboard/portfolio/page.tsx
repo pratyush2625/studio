@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
@@ -152,6 +153,9 @@ export default function PortfolioPage() {
 
   const [certificationEntries, setCertificationEntries] = useState<Certification[]>(currentResume.certificationEntries);
   const [newCertification, setNewCertification] = useState<Certification>({ title: '', provider: '', date: '' });
+  
+  const [aboutMe, setAboutMe] = useState('Aspiring software engineer with a passion for building beautiful and functional web applications. Currently diving deep into AI and machine learning.');
+
 
   const loadResumeIntoEditor = (resume: ResumeData) => {
     setCurrentResume(resume);
@@ -840,9 +844,12 @@ export default function PortfolioPage() {
                             <CardTitle>About Me</CardTitle>
                         </CardHeader>
                         <CardContent>
-                            <p className="text-sm text-muted-foreground">
-                                Aspiring software engineer with a passion for building beautiful and functional web applications. Currently diving deep into AI and machine learning.
-                            </p>
+                             <Textarea
+                                value={aboutMe}
+                                onChange={(e) => setAboutMe(e.target.value)}
+                                placeholder="Write a short bio about yourself..."
+                                className="text-sm text-muted-foreground"
+                            />
                         </CardContent>
                     </Card>
                      <Card>
@@ -909,5 +916,7 @@ export default function PortfolioPage() {
   );
 }
 
+
+    
 
     
