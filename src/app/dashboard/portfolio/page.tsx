@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 import {
@@ -18,6 +18,9 @@ import {
   Copy,
   Upload,
   Link as LinkIcon,
+  Save,
+  File,
+  FilePlus,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -43,8 +46,14 @@ import { ClassicTemplate } from '@/components/portfolio/classic-template';
 import { ModernTemplate } from '@/components/portfolio/modern-template';
 import { MinimalTemplate } from '@/components/portfolio/minimal-template';
 import { Separator } from '@/components/ui/separator';
+import { ResumeList } from '@/components/portfolio/resume-list';
 
 const resumeSections = [
+  { name: 'Resume Builder', icon: FilePlus },
+  { name: 'My Resumes', icon: File },
+];
+
+const builderSections = [
   { name: 'Personal Info', icon: User },
   { name: 'Skills & Languages', icon: Sparkles },
   { name: 'Education', icon: GraduationCap },
@@ -53,6 +62,7 @@ const resumeSections = [
   { name: 'Certifications', icon: Award },
 ];
 
+
 // Type Definitions
 export type SocialLink = { platform: string; url: string };
 export type Education = { institute: string; degree: string; startYear: string; endYear: string; gpa: string };
@@ -60,6 +70,8 @@ export type Experience = { company: string; title: string; duration: string; des
 export type Project = { name: string; tech: string; link: string; description: string };
 export type Certification = { title: string; provider: string; date: string };
 export type ResumeData = {
+    id: string;
+    resumeName: string;
     name: string;
     headline: string;
     email: string;
@@ -74,40 +86,142 @@ export type ResumeData = {
     certificationEntries: Certification[];
 }
 
+const initialResumeData: ResumeData = {
+    id: `resume-${Date.now()}`,
+    resumeName: 'My First Resume',
+    name: 'Kshatriya Pratyush Singh',
+    headline: 'A brief headline about yourself',
+    email: 'pratyush.2625@gmail.com',
+    phone: '+91 87905 36250',
+    location: 'Hyderabad, India',
+    socialLinks: [ { platform: 'Github', url: 'https://github.com/pratyush2625' } ],
+    technicalSkills: ['React.js'],
+    languages: ['English'],
+    educationEntries: [],
+    experienceEntries: [],
+    projectEntries: [],
+    certificationEntries: [],
+};
+
 
 export default function PortfolioPage() {
+  const [activeView, setActiveView] = useState('Resume Builder');
   const [activeSection, setActiveSection] = useState('Personal Info');
   const [template, setTemplate] = useState('classic');
   const resumePreviewRef = useRef<HTMLDivElement>(null);
 
+  const [resumes, setResumes] = useState<ResumeData[]>([initialResumeData]);
+  const [currentResume, setCurrentResume] = useState<ResumeData>(initialResumeData);
 
   // --- State for all sections ---
-  const [name, setName] = useState('Kshatriya Pratyush Singh');
-  const [headline, setHeadline] = useState('A brief headline about yourself');
-  const [email, setEmail] = useState('pratyush.2625@gmail.com');
-  const [phone, setPhone] = useState('+91 87905 36250');
-  const [location, setLocation] = useState('Hyderabad, India');
+  const [resumeName, setResumeName] = useState(currentResume.resumeName);
+  const [name, setName] = useState(currentResume.name);
+  const [headline, setHeadline] = useState(currentResume.headline);
+  const [email, setEmail] = useState(currentResume.email);
+  const [phone, setPhone] = useState(currentResume.phone);
+  const [location, setLocation] = useState(currentResume.location);
   
-  const [socialLinks, setSocialLinks] = useState<SocialLink[]>([ { platform: 'Github', url: 'https://github.com/pratyush2625' } ]);
+  const [socialLinks, setSocialLinks] = useState<SocialLink[]>(currentResume.socialLinks);
   const [newLinkPlatform, setNewLinkPlatform] = useState('');
   const [newLinkUrl, setNewLinkUrl] = useState('');
 
-  const [technicalSkills, setTechnicalSkills] = useState<string[]>(['React.js']);
-  const [languages, setLanguages] = useState<string[]>(['English']);
+  const [technicalSkills, setTechnicalSkills] = useState<string[]>(currentResume.technicalSkills);
+  const [languages, setLanguages] = useState<string[]>(currentResume.languages);
   const [newSkill, setNewSkill] = useState('');
   const [newLanguage, setNewLanguage] = useState('');
   
-  const [educationEntries, setEducationEntries] = useState<Education[]>([]);
+  const [educationEntries, setEducationEntries] = useState<Education[]>(currentResume.educationEntries);
   const [newEducation, setNewEducation] = useState<Education>({ institute: '', degree: '', startYear: '', endYear: '', gpa: '' });
 
-  const [experienceEntries, setExperienceEntries] = useState<Experience[]>([]);
+  const [experienceEntries, setExperienceEntries] = useState<Experience[]>(currentResume.experienceEntries);
   const [newExperience, setNewExperience] = useState<Experience>({ company: '', title: '', duration: '', description: '' });
 
-  const [projectEntries, setProjectEntries] = useState<Project[]>([]);
+  const [projectEntries, setProjectEntries] = useState<Project[]>(currentResume.projectEntries);
   const [newProject, setNewProject] = useState<Project>({ name: '', tech: '', link: '', description: '' });
 
-  const [certificationEntries, setCertificationEntries] = useState<Certification[]>([]);
+  const [certificationEntries, setCertificationEntries] = useState<Certification[]>(currentResume.certificationEntries);
   const [newCertification, setNewCertification] = useState<Certification>({ title: '', provider: '', date: '' });
+
+  const loadResumeIntoEditor = (resume: ResumeData) => {
+    setCurrentResume(resume);
+    setActiveView('Resume Builder');
+  }
+
+  useEffect(() => {
+    if (currentResume) {
+        setResumeName(currentResume.resumeName);
+        setName(currentResume.name);
+        setHeadline(currentResume.headline);
+        setEmail(currentResume.email);
+        setPhone(currentResume.phone);
+        setLocation(currentResume.location);
+        setSocialLinks(currentResume.socialLinks);
+        setTechnicalSkills(currentResume.technicalSkills);
+        setLanguages(currentResume.languages);
+        setEducationEntries(currentResume.educationEntries);
+        setExperienceEntries(currentResume.experienceEntries);
+        setProjectEntries(currentResume.projectEntries);
+        setCertificationEntries(currentResume.certificationEntries);
+    }
+  }, [currentResume])
+
+  const handleNewResume = () => {
+    const newResume: ResumeData = {
+      id: `resume-${Date.now()}`,
+      resumeName: 'Untitled Resume',
+      name: 'Your Name',
+      headline: '',
+      email: '',
+      phone: '',
+      location: '',
+      socialLinks: [],
+      technicalSkills: [],
+      languages: [],
+      educationEntries: [],
+      experienceEntries: [],
+      projectEntries: [],
+      certificationEntries: [],
+    }
+    setResumes([...resumes, newResume]);
+    loadResumeIntoEditor(newResume);
+  }
+
+  const handleSaveResume = () => {
+      const updatedResume: ResumeData = {
+        ...currentResume,
+        resumeName, name, headline, email, phone, location, socialLinks,
+        technicalSkills, languages, educationEntries, experienceEntries,
+        projectEntries, certificationEntries
+      };
+
+      const existingIndex = resumes.findIndex(r => r.id === updatedResume.id);
+      
+      if (existingIndex > -1) {
+        // Update existing resume
+        const updatedResumes = [...resumes];
+        updatedResumes[existingIndex] = updatedResume;
+        setResumes(updatedResumes);
+      } else {
+        // This case should ideally not happen with current flow, but as a fallback
+        setResumes([...resumes, updatedResume]);
+      }
+      setCurrentResume(updatedResume);
+      alert('Resume saved!');
+  }
+
+  const handleDeleteResume = (resumeId: string) => {
+      if (resumes.length <= 1) {
+        alert("You cannot delete the last resume.");
+        return;
+      }
+      const updatedResumes = resumes.filter(r => r.id !== resumeId);
+      setResumes(updatedResumes);
+      if (currentResume.id === resumeId) {
+          loadResumeIntoEditor(updatedResumes[0] || initialResumeData);
+      }
+      setActiveView('My Resumes');
+  }
+
 
   // --- Handlers ---
   const handleAddSocialLink = () => {
@@ -184,7 +298,7 @@ export default function PortfolioPage() {
   const handleRemoveCertification = (index: number) => setCertificationEntries(certificationEntries.filter((_, i) => i !== index));
   
   const resumeData: ResumeData = {
-    name, headline, email, phone, location, socialLinks,
+    id: currentResume.id, resumeName, name, headline, email, phone, location, socialLinks,
     technicalSkills, languages, educationEntries, experienceEntries,
     projectEntries, certificationEntries
   }
@@ -246,20 +360,25 @@ export default function PortfolioPage() {
                   <ChevronLeft className="h-4 w-4" /> Go Back to Dashboard
                 </Link>
               </Button>
-              <p className="px-2 pt-4 pb-2 text-xs font-semibold text-muted-foreground">
-                Resume Builder
-              </p>
+
+              <div className="px-2 pt-4 pb-2">
+                  <Button className="w-full" onClick={handleNewResume}>
+                      <FilePlus className="h-4 w-4 mr-2"/> New Resume
+                  </Button>
+              </div>
+
               {resumeSections.map((section) => (
                 <Button
                   key={section.name}
-                  variant={activeSection === section.name ? 'secondary' : 'ghost'}
+                  variant={activeView === section.name ? 'secondary' : 'ghost'}
                   className="justify-start gap-3"
-                  onClick={() => setActiveSection(section.name)}
+                  onClick={() => setActiveView(section.name)}
                 >
                   <section.icon className="h-5 w-5 text-muted-foreground" />
                   <span>{section.name}</span>
                 </Button>
               ))}
+
             </nav>
           </CardContent>
         </Card>
@@ -267,341 +386,369 @@ export default function PortfolioPage() {
 
       {/* Middle Form Content */}
       <div className="lg:col-span-5 xl:col-span-6">
-        <Card className="h-full">
-          <CardHeader>
-            <p className="text-sm text-muted-foreground">
-              Tools &gt; Resume Builder &gt; My Resume
-            </p>
-          </CardHeader>
-          <CardContent className="space-y-8">
-            {activeSection === 'Personal Info' && (
-              <>
-                <div>
-                  <h2 className="text-2xl font-semibold">Profile Info</h2>
-                  <div className="space-y-4 mt-4">
-                    <div className="grid gap-2">
-                      <Label htmlFor="name">Name</Label>
-                      <Input id="name" value={name} onChange={(e) => setName(e.target.value)} placeholder="Kshatriya Pratyush Singh" />
-                    </div>
-                    <div className="grid gap-2">
-                      <Label htmlFor="headline">Subtitle/Headline</Label>
-                      <Input id="headline" value={headline} onChange={(e) => setHeadline(e.target.value)} placeholder="A brief headline about yourself" />
-                    </div>
-                    <div className="grid gap-2">
-                      <Label htmlFor="email">Email</Label>
-                      <Input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="pratyush.2625@gmail.com" />
-                    </div>
-                  </div>
+        {activeView === 'Resume Builder' ? (
+          <Card className="h-full">
+             <CardHeader className="flex flex-row justify-between items-center">
+               <div className='flex-1'>
+                  <Label htmlFor='resumeName'>Resume Name</Label>
+                  <Input id="resumeName" value={resumeName} onChange={(e) => setResumeName(e.target.value)} placeholder="e.g. My Job Application" className="text-lg font-semibold tracking-tight border-0 shadow-none px-0 focus-visible:ring-0"/>
+               </div>
+                <div className='flex gap-2'>
+                    <Button onClick={handleSaveResume}><Save className="mr-2 h-4 w-4"/>Save</Button>
+                    <Button onClick={() => handleDeleteResume(currentResume.id)} variant="destructive"><Trash2 className="mr-2 h-4 w-4"/>Delete</Button>
                 </div>
+            </CardHeader>
+            <CardContent className="space-y-8">
+              <nav className="flex items-center border-b overflow-x-auto">
+                {builderSections.map(section => (
+                   <Button key={section.name} variant="ghost" size="sm" className={`flex-shrink-0 rounded-b-none border-b-2 ${activeSection === section.name ? 'border-primary' : 'border-transparent'}`} onClick={() => setActiveSection(section.name)}>
+                     {section.name}
+                   </Button>
+                ))}
+              </nav>
 
-                <div>
-                  <h2 className="text-2xl font-semibold">Contact Info</h2>
-                  <div className="grid sm:grid-cols-2 gap-4 mt-4">
-                    <div className="grid gap-2">
-                      <Label htmlFor="phone">Phone Number</Label>
-                      <Input id="phone" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="+91 87905 36250" />
-                    </div>
-                    <div className="grid gap-2">
-                      <Label htmlFor="location">Location</Label>
-                      <Input id="location" value={location} onChange={(e) => setLocation(e.target.value)} placeholder="Hyderabad, India" />
+              {activeSection === 'Personal Info' && (
+                <>
+                  <div>
+                    <h2 className="text-2xl font-semibold">Profile Info</h2>
+                    <div className="space-y-4 mt-4">
+                      <div className="grid gap-2">
+                        <Label htmlFor="name">Name</Label>
+                        <Input id="name" value={name} onChange={(e) => setName(e.target.value)} placeholder="Kshatriya Pratyush Singh" />
+                      </div>
+                      <div className="grid gap-2">
+                        <Label htmlFor="headline">Subtitle/Headline</Label>
+                        <Input id="headline" value={headline} onChange={(e) => setHeadline(e.target.value)} placeholder="A brief headline about yourself" />
+                      </div>
+                      <div className="grid gap-2">
+                        <Label htmlFor="email">Email</Label>
+                        <Input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="pratyush.2625@gmail.com" />
+                      </div>
                     </div>
                   </div>
-                </div>
-            
+
+                  <div>
+                    <h2 className="text-2xl font-semibold">Contact Info</h2>
+                    <div className="grid sm:grid-cols-2 gap-4 mt-4">
+                      <div className="grid gap-2">
+                        <Label htmlFor="phone">Phone Number</Label>
+                        <Input id="phone" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="+91 87905 36250" />
+                      </div>
+                      <div className="grid gap-2">
+                        <Label htmlFor="location">Location</Label>
+                        <Input id="location" value={location} onChange={(e) => setLocation(e.target.value)} placeholder="Hyderabad, India" />
+                      </div>
+                    </div>
+                  </div>
+              
+                  <div>
+                    <h2 className="text-2xl font-semibold">Social Links</h2>
+                    <div className="space-y-4 mt-4">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        {socialLinks.map((link, index) => (
+                          <Badge key={index} variant="secondary" className="py-1 px-3">
+                            {link.platform}
+                            <Button variant="ghost" size="icon" className="h-4 w-4 ml-2" onClick={() => handleRemoveSocialLink(index)}>
+                              <Trash2 className="h-3 w-3" />
+                            </Button>
+                          </Badge>
+                        ))}
+                      </div>
+                      <div className="grid sm:grid-cols-2 gap-4">
+                          <div className="grid gap-2">
+                            <Label htmlFor="platform">Platform</Label>
+                            <Select value={newLinkPlatform} onValueChange={setNewLinkPlatform}>
+                                <SelectTrigger>
+                                    <SelectValue placeholder="Select a platform" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="Github">Github</SelectItem>
+                                    <SelectItem value="LinkedIn">LinkedIn</SelectItem>
+                                    <SelectItem value="Twitter">Twitter</SelectItem>
+                                    <SelectItem value="Portfolio">Portfolio</SelectItem>
+                                </SelectContent>
+                            </Select>
+                          </div>
+                          <div className="grid gap-2">
+                            <Label htmlFor="profile-url">Profile URL</Label>
+                            <Input id="profile-url" value={newLinkUrl} onChange={(e) => setNewLinkUrl(e.target.value)} placeholder="e.g., https://github.com/username" />
+                          </div>
+                      </div>
+                      <Button variant="outline" className="w-full sm:w-auto" onClick={handleAddSocialLink}>
+                          <Plus className="h-4 w-4 mr-2" /> Add Social Link
+                      </Button>
+                    </div>
+                  </div>
+                </>
+              )}
+
+              {activeSection === 'Skills & Languages' && (
+                <>
+                  <div>
+                    <h2 className="text-2xl font-semibold">Technical Skills</h2>
+                     <div className="flex items-center gap-2 flex-wrap mt-4">
+                        {technicalSkills.map((skill, index) => (
+                          <Badge key={index} variant="secondary" className="py-1 px-3">
+                            {skill}
+                            <Button variant="ghost" size="icon" className="h-4 w-4 ml-2" onClick={() => handleRemoveSkill(index)}>
+                              <Trash2 className="h-3 w-3" />
+                            </Button>
+                          </Badge>
+                        ))}
+                      </div>
+                    <div className="space-y-4 mt-4">
+                      <div className="grid gap-2">
+                        <Label htmlFor="skill">Add a Skill</Label>
+                        <div className="flex gap-2">
+                          <Input id="skill" value={newSkill} onChange={(e) => setNewSkill(e.target.value)} placeholder="e.g., Next.js" />
+                          <Button onClick={handleAddSkill}>Add</Button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div>
+                    <h2 className="text-2xl font-semibold mt-8">Languages</h2>
+                     <div className="flex items-center gap-2 flex-wrap mt-4">
+                        {languages.map((lang, index) => (
+                          <Badge key={index} variant="secondary" className="py-1 px-3">
+                            {lang}
+                            <Button variant="ghost" size="icon" className="h-4 w-4 ml-2" onClick={() => handleRemoveLanguage(index)}>
+                              <Trash2 className="h-3 w-3" />
+                            </Button>
+                          </Badge>
+                        ))}
+                      </div>
+                    <div className="space-y-4 mt-4">
+                      <div className="grid gap-2">
+                        <Label htmlFor="language">Add a Language</Label>
+                        <div className="flex gap-2">
+                          <Input id="language" value={newLanguage} onChange={(e) => setNewLanguage(e.target.value)} placeholder="e.g., Spanish" />
+                          <Button onClick={handleAddLanguage}>Add</Button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </>
+              )}
+
+              {activeSection === 'Education' && (
                 <div>
-                  <h2 className="text-2xl font-semibold">Social Links</h2>
+                  <h2 className="text-2xl font-semibold">Education</h2>
                   <div className="space-y-4 mt-4">
-                    <div className="flex items-center gap-2 flex-wrap">
-                      {socialLinks.map((link, index) => (
-                        <Badge key={index} variant="secondary" className="py-1 px-3">
-                          {link.platform}
-                          <Button variant="ghost" size="icon" className="h-4 w-4 ml-2" onClick={() => handleRemoveSocialLink(index)}>
-                            <Trash2 className="h-3 w-3" />
+                    {educationEntries.map((entry, index) => (
+                      <Card key={index} className="bg-secondary/30">
+                        <CardHeader className="flex flex-row items-center justify-between py-3">
+                          <h3 className="font-semibold text-base">{entry.institute}</h3>
+                          <Button variant="ghost" size="icon" className="h-6 w-6" onClick={() => handleRemoveEducation(index)}>
+                            <Trash2 className="h-4 w-4" />
                           </Button>
-                        </Badge>
-                      ))}
-                    </div>
+                        </CardHeader>
+                        <CardContent className="pt-0 text-sm">
+                          <p>{entry.degree}</p>
+                          <p className="text-muted-foreground">{entry.startYear} - {entry.endYear}</p>
+                        </CardContent>
+                      </Card>
+                    ))}
+                  </div>
+                  <div className="mt-6 border-t pt-6 space-y-4">
                     <div className="grid sm:grid-cols-2 gap-4">
-                        <div className="grid gap-2">
-                          <Label htmlFor="platform">Platform</Label>
-                          <Select value={newLinkPlatform} onValueChange={setNewLinkPlatform}>
-                              <SelectTrigger>
-                                  <SelectValue placeholder="Select a platform" />
-                              </SelectTrigger>
-                              <SelectContent>
-                                  <SelectItem value="Github">Github</SelectItem>
-                                  <SelectItem value="LinkedIn">LinkedIn</SelectItem>
-                                  <SelectItem value="Twitter">Twitter</SelectItem>
-                                  <SelectItem value="Portfolio">Portfolio</SelectItem>
-                              </SelectContent>
-                          </Select>
-                        </div>
-                        <div className="grid gap-2">
-                          <Label htmlFor="profile-url">Profile URL</Label>
-                          <Input id="profile-url" value={newLinkUrl} onChange={(e) => setNewLinkUrl(e.target.value)} placeholder="e.g., https://github.com/username" />
-                        </div>
+                      <div className="grid gap-2">
+                        <Label htmlFor="institute">Institute</Label>
+                        <Input name="institute" value={newEducation.institute} onChange={handleEducationInputChange} placeholder="e.g., Stanford University" />
+                      </div>
+                      <div className="grid gap-2">
+                        <Label htmlFor="degree">Degree/Program</Label>
+                        <Input name="degree" value={newEducation.degree} onChange={handleEducationInputChange} placeholder="e.g., B.S. in Computer Science" />
+                      </div>
                     </div>
-                    <Button variant="outline" className="w-full sm:w-auto" onClick={handleAddSocialLink}>
-                        <Plus className="h-4 w-4 mr-2" /> Add Social Link
+                    <div className="grid sm:grid-cols-3 gap-4">
+                      <div className="grid gap-2">
+                        <Label htmlFor="startYear">Start Year</Label>
+                        <Input name="startYear" value={newEducation.startYear} onChange={handleEducationInputChange} placeholder="2020" />
+                      </div>
+                      <div className="grid gap-2">
+                        <Label htmlFor="endYear">End Year</Label>
+                        <Input name="endYear" value={newEducation.endYear} onChange={handleEducationInputChange} placeholder="2024" />
+                      </div>
+                      <div className="grid gap-2">
+                        <Label htmlFor="gpa">GPA/Percentage</Label>
+                        <Input name="gpa" value={newEducation.gpa} onChange={handleEducationInputChange} placeholder="e.g., 3.8/4.0" />
+                      </div>
+                    </div>
+                    <Button variant="outline" className="w-full sm:w-auto" onClick={handleAddEducation}>
+                      <Plus className="h-4 w-4 mr-2" /> Add Education
                     </Button>
                   </div>
                 </div>
-              </>
-            )}
+              )}
 
-            {activeSection === 'Skills & Languages' && (
-              <>
+              {activeSection === 'Experience' && (
                 <div>
-                  <h2 className="text-2xl font-semibold">Technical Skills</h2>
-                   <div className="flex items-center gap-2 flex-wrap mt-4">
-                      {technicalSkills.map((skill, index) => (
-                        <Badge key={index} variant="secondary" className="py-1 px-3">
-                          {skill}
-                          <Button variant="ghost" size="icon" className="h-4 w-4 ml-2" onClick={() => handleRemoveSkill(index)}>
-                            <Trash2 className="h-3 w-3" />
-                          </Button>
-                        </Badge>
-                      ))}
-                    </div>
+                  <h2 className="text-2xl font-semibold">Work Experience</h2>
                   <div className="space-y-4 mt-4">
-                    <div className="grid gap-2">
-                      <Label htmlFor="skill">Add a Skill</Label>
-                      <div className="flex gap-2">
-                        <Input id="skill" value={newSkill} onChange={(e) => setNewSkill(e.target.value)} placeholder="e.g., Next.js" />
-                        <Button onClick={handleAddSkill}>Add</Button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div>
-                  <h2 className="text-2xl font-semibold mt-8">Languages</h2>
-                   <div className="flex items-center gap-2 flex-wrap mt-4">
-                      {languages.map((lang, index) => (
-                        <Badge key={index} variant="secondary" className="py-1 px-3">
-                          {lang}
-                          <Button variant="ghost" size="icon" className="h-4 w-4 ml-2" onClick={() => handleRemoveLanguage(index)}>
-                            <Trash2 className="h-3 w-3" />
+                    {experienceEntries.map((entry, index) => (
+                      <Card key={index} className="bg-secondary/30">
+                        <CardHeader className="flex flex-row items-center justify-between py-3">
+                           <div>
+                              <h3 className="font-semibold text-base">{entry.title}</h3>
+                              <p className="text-sm font-normal text-muted-foreground">{entry.company}</p>
+                          </div>
+                          <Button variant="ghost" size="icon" className="h-6 w-6" onClick={() => handleRemoveExperience(index)}>
+                            <Trash2 className="h-4 w-4" />
                           </Button>
-                        </Badge>
-                      ))}
-                    </div>
-                  <div className="space-y-4 mt-4">
-                    <div className="grid gap-2">
-                      <Label htmlFor="language">Add a Language</Label>
-                      <div className="flex gap-2">
-                        <Input id="language" value={newLanguage} onChange={(e) => setNewLanguage(e.target.value)} placeholder="e.g., Spanish" />
-                        <Button onClick={handleAddLanguage}>Add</Button>
+                        </CardHeader>
+                      </Card>
+                    ))}
+                  </div>
+                  <div className="mt-6 border-t pt-6 space-y-4">
+                    <div className="grid sm:grid-cols-2 gap-4">
+                      <div className="grid gap-2">
+                        <Label htmlFor="company">Company</Label>
+                        <Input name="company" value={newExperience.company} onChange={handleExperienceInputChange} placeholder="e.g., Google" />
                       </div>
-                    </div>
-                  </div>
-                </div>
-              </>
-            )}
-
-            {activeSection === 'Education' && (
-              <div>
-                <h2 className="text-2xl font-semibold">Education</h2>
-                <div className="space-y-4 mt-4">
-                  {educationEntries.map((entry, index) => (
-                    <Card key={index} className="bg-secondary/30">
-                      <CardHeader className="flex flex-row items-center justify-between py-3">
-                        <h3 className="font-semibold text-base">{entry.institute}</h3>
-                        <Button variant="ghost" size="icon" className="h-6 w-6" onClick={() => handleRemoveEducation(index)}>
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
-                      </CardHeader>
-                      <CardContent className="pt-0 text-sm">
-                        <p>{entry.degree}</p>
-                        <p className="text-muted-foreground">{entry.startYear} - {entry.endYear}</p>
-                      </CardContent>
-                    </Card>
-                  ))}
-                </div>
-                <div className="mt-6 border-t pt-6 space-y-4">
-                  <div className="grid sm:grid-cols-2 gap-4">
-                    <div className="grid gap-2">
-                      <Label htmlFor="institute">Institute</Label>
-                      <Input name="institute" value={newEducation.institute} onChange={handleEducationInputChange} placeholder="e.g., Stanford University" />
-                    </div>
-                    <div className="grid gap-2">
-                      <Label htmlFor="degree">Degree/Program</Label>
-                      <Input name="degree" value={newEducation.degree} onChange={handleEducationInputChange} placeholder="e.g., B.S. in Computer Science" />
-                    </div>
-                  </div>
-                  <div className="grid sm:grid-cols-3 gap-4">
-                    <div className="grid gap-2">
-                      <Label htmlFor="startYear">Start Year</Label>
-                      <Input name="startYear" value={newEducation.startYear} onChange={handleEducationInputChange} placeholder="2020" />
-                    </div>
-                    <div className="grid gap-2">
-                      <Label htmlFor="endYear">End Year</Label>
-                      <Input name="endYear" value={newEducation.endYear} onChange={handleEducationInputChange} placeholder="2024" />
-                    </div>
-                    <div className="grid gap-2">
-                      <Label htmlFor="gpa">GPA/Percentage</Label>
-                      <Input name="gpa" value={newEducation.gpa} onChange={handleEducationInputChange} placeholder="e.g., 3.8/4.0" />
-                    </div>
-                  </div>
-                  <Button variant="outline" className="w-full sm:w-auto" onClick={handleAddEducation}>
-                    <Plus className="h-4 w-4 mr-2" /> Add Education
-                  </Button>
-                </div>
-              </div>
-            )}
-
-            {activeSection === 'Experience' && (
-              <div>
-                <h2 className="text-2xl font-semibold">Work Experience</h2>
-                <div className="space-y-4 mt-4">
-                  {experienceEntries.map((entry, index) => (
-                    <Card key={index} className="bg-secondary/30">
-                      <CardHeader className="flex flex-row items-center justify-between py-3">
-                         <div>
-                            <h3 className="font-semibold text-base">{entry.title}</h3>
-                            <p className="text-sm font-normal text-muted-foreground">{entry.company}</p>
-                        </div>
-                        <Button variant="ghost" size="icon" className="h-6 w-6" onClick={() => handleRemoveExperience(index)}>
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
-                      </CardHeader>
-                    </Card>
-                  ))}
-                </div>
-                <div className="mt-6 border-t pt-6 space-y-4">
-                  <div className="grid sm:grid-cols-2 gap-4">
-                    <div className="grid gap-2">
-                      <Label htmlFor="company">Company</Label>
-                      <Input name="company" value={newExperience.company} onChange={handleExperienceInputChange} placeholder="e.g., Google" />
-                    </div>
-                    <div className="grid gap-2">
-                      <Label htmlFor="title">Job Title</Label>
-                      <Input name="title" value={newExperience.title} onChange={handleExperienceInputChange} placeholder="e.g., Software Engineer Intern" />
-                    </div>
-                  </div>
-                   <div className="grid gap-2">
-                      <Label htmlFor="duration">Duration</Label>
-                      <Input name="duration" value={newExperience.duration} onChange={handleExperienceInputChange} placeholder="e.g., May 2023 - Aug 2023" />
-                    </div>
-                  <div className="grid gap-2">
-                    <Label htmlFor="description">Description</Label>
-                    <Textarea name="description" value={newExperience.description} onChange={handleExperienceInputChange} placeholder="Describe your roles and achievements..." />
-                  </div>
-                  <Button variant="outline" className="w-full sm:w-auto" onClick={handleAddExperience}>
-                    <Plus className="h-4 w-4 mr-2" /> Add Experience
-                  </Button>
-                </div>
-              </div>
-            )}
-
-            {activeSection === 'Projects' && (
-              <div>
-                <h2 className="text-2xl font-semibold">Projects</h2>
-                <div className="space-y-4 mt-4">
-                  {projectEntries.map((entry, index) => (
-                    <Card key={index} className="bg-secondary/30">
-                      <CardHeader className="flex flex-row items-center justify-between py-3">
-                         <h3 className="font-semibold text-base">{entry.name}</h3>
-                        <Button variant="ghost" size="icon" className="h-6 w-6" onClick={() => handleRemoveProject(index)}>
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
-                      </CardHeader>
-                    </Card>
-                  ))}
-                </div>
-                <div className="mt-6 border-t pt-6 space-y-4">
-                  <div className="grid sm:grid-cols-2 gap-4">
-                    <div className="grid gap-2">
-                      <Label htmlFor="name">Project Name</Label>
-                      <Input name="name" value={newProject.name} onChange={handleProjectInputChange} placeholder="e.g., Portfolio Website" />
+                      <div className="grid gap-2">
+                        <Label htmlFor="title">Job Title</Label>
+                        <Input name="title" value={newExperience.title} onChange={handleExperienceInputChange} placeholder="e.g., Software Engineer Intern" />
+                      </div>
                     </div>
                      <div className="grid gap-2">
-                      <Label htmlFor="tech">Technologies Used</Label>
-                      <Input name="tech" value={newProject.tech} onChange={handleProjectInputChange} placeholder="e.g., Next.js, Tailwind CSS" />
+                        <Label htmlFor="duration">Duration</Label>
+                        <Input name="duration" value={newExperience.duration} onChange={handleExperienceInputChange} placeholder="e.g., May 2023 - Aug 2023" />
+                      </div>
+                    <div className="grid gap-2">
+                      <Label htmlFor="description">Description</Label>
+                      <Textarea name="description" value={newExperience.description} onChange={handleExperienceInputChange} placeholder="Describe your roles and achievements..." />
                     </div>
+                    <Button variant="outline" className="w-full sm:w-auto" onClick={handleAddExperience}>
+                      <Plus className="h-4 w-4 mr-2" /> Add Experience
+                    </Button>
                   </div>
-                  <div className="grid gap-2">
-                    <Label htmlFor="link">Project Link</Label>
-                    <Input name="link" value={newProject.link} onChange={handleProjectInputChange} placeholder="e.g., https://github.com/user/project" />
-                  </div>
-                  <div className="grid gap-2">
-                    <Label htmlFor="description">Description</Label>
-                    <Textarea name="description" value={newProject.description} onChange={handleProjectInputChange} placeholder="Describe your project..." />
-                  </div>
-                  <Button variant="outline" className="w-full sm:w-auto" onClick={handleAddProject}>
-                    <Plus className="h-4 w-4 mr-2" /> Add Project
-                  </Button>
                 </div>
-              </div>
-            )}
+              )}
 
-            {activeSection === 'Certifications' && (
+              {activeSection === 'Projects' && (
+                <div>
+                  <h2 className="text-2xl font-semibold">Projects</h2>
+                  <div className="space-y-4 mt-4">
+                    {projectEntries.map((entry, index) => (
+                      <Card key={index} className="bg-secondary/30">
+                        <CardHeader className="flex flex-row items-center justify-between py-3">
+                           <h3 className="font-semibold text-base">{entry.name}</h3>
+                          <Button variant="ghost" size="icon" className="h-6 w-6" onClick={() => handleRemoveProject(index)}>
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </CardHeader>
+                      </Card>
+                    ))}
+                  </div>
+                  <div className="mt-6 border-t pt-6 space-y-4">
+                    <div className="grid sm:grid-cols-2 gap-4">
+                      <div className="grid gap-2">
+                        <Label htmlFor="name">Project Name</Label>
+                        <Input name="name" value={newProject.name} onChange={handleProjectInputChange} placeholder="e.g., Portfolio Website" />
+                      </div>
+                       <div className="grid gap-2">
+                        <Label htmlFor="tech">Technologies Used</Label>
+                        <Input name="tech" value={newProject.tech} onChange={handleProjectInputChange} placeholder="e.g., Next.js, Tailwind CSS" />
+                      </div>
+                    </div>
+                    <div className="grid gap-2">
+                      <Label htmlFor="link">Project Link</Label>
+                      <Input name="link" value={newProject.link} onChange={handleProjectInputChange} placeholder="e.g., https://github.com/user/project" />
+                    </div>
+                    <div className="grid gap-2">
+                      <Label htmlFor="description">Description</Label>
+                      <Textarea name="description" value={newProject.description} onChange={handleProjectInputChange} placeholder="Describe your project..." />
+                    </div>
+                    <Button variant="outline" className="w-full sm:w-auto" onClick={handleAddProject}>
+                      <Plus className="h-4 w-4 mr-2" /> Add Project
+                    </Button>
+                  </div>
+                </div>
+              )}
+
+              {activeSection === 'Certifications' && (
+                <div>
+                  <h2 className="text-2xl font-semibold">Certifications</h2>
+                   <div className="space-y-4 mt-4">
+                    {certificationEntries.map((entry, index) => (
+                      <Card key={index} className="bg-secondary/30">
+                        <CardHeader className="flex flex-row items-center justify-between py-3">
+                           <h3 className="font-semibold text-base">{entry.title}</h3>
+                          <Button variant="ghost" size="icon" className="h-6 w-6" onClick={() => handleRemoveCertification(index)}>
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </CardHeader>
+                      </Card>
+                    ))}
+                  </div>
+                  <div className="mt-6 border-t pt-6 space-y-4">
+                    <div className="grid sm:grid-cols-2 gap-4">
+                      <div className="grid gap-2">
+                        <Label htmlFor="title">Certification Title</Label>
+                        <Input name="title" value={newCertification.title} onChange={handleCertificationInputChange} placeholder="e.g., AWS Certified Cloud Practitioner" />
+                      </div>
+                      <div className="grid gap-2">
+                        <Label htmlFor="provider">Provider</Label>
+                        <Input name="provider" value={newCertification.provider} onChange={handleCertificationInputChange} placeholder="e.g., Amazon Web Services" />
+                      </div>
+                    </div>
+                    <div className="grid gap-2">
+                        <Label htmlFor="date">Date Issued</Label>
+                        <Input name="date" value={newCertification.date} onChange={handleCertificationInputChange} placeholder="e.g., June 2024" />
+                    </div>
+                    <Button variant="outline" className="w-full sm:w-auto" onClick={handleAddCertification}>
+                      <Plus className="h-4 w-4 mr-2" /> Add Certification
+                    </Button>
+                  </div>
+                </div>
+              )}
+
+              <Separator className="my-8" />
+              
               <div>
-                <h2 className="text-2xl font-semibold">Certifications</h2>
-                 <div className="space-y-4 mt-4">
-                  {certificationEntries.map((entry, index) => (
-                    <Card key={index} className="bg-secondary/30">
-                      <CardHeader className="flex flex-row items-center justify-between py-3">
-                         <h3 className="font-semibold text-base">{entry.title}</h3>
-                        <Button variant="ghost" size="icon" className="h-6 w-6" onClick={() => handleRemoveCertification(index)}>
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
-                      </CardHeader>
-                    </Card>
-                  ))}
-                </div>
-                <div className="mt-6 border-t pt-6 space-y-4">
-                  <div className="grid sm:grid-cols-2 gap-4">
-                    <div className="grid gap-2">
-                      <Label htmlFor="title">Certification Title</Label>
-                      <Input name="title" value={newCertification.title} onChange={handleCertificationInputChange} placeholder="e.g., AWS Certified Cloud Practitioner" />
-                    </div>
-                    <div className="grid gap-2">
-                      <Label htmlFor="provider">Provider</Label>
-                      <Input name="provider" value={newCertification.provider} onChange={handleCertificationInputChange} placeholder="e.g., Amazon Web Services" />
-                    </div>
-                  </div>
-                  <div className="grid gap-2">
-                      <Label htmlFor="date">Date Issued</Label>
-                      <Input name="date" value={newCertification.date} onChange={handleCertificationInputChange} placeholder="e.g., June 2024" />
-                  </div>
-                  <Button variant="outline" className="w-full sm:w-auto" onClick={handleAddCertification}>
-                    <Plus className="h-4 w-4 mr-2" /> Add Certification
-                  </Button>
-                </div>
+                  <h2 className="text-2xl font-semibold">Build a Public Portfolio</h2>
+                  <p className="text-muted-foreground mt-2 text-sm">
+                      Generate a shareable public portfolio page based on the information you&apos;ve provided.
+                  </p>
+                  <Card className="mt-4 bg-secondary/30">
+                      <CardContent className="p-4 flex items-center justify-between">
+                          <div className="flex items-center gap-3">
+                              <LinkIcon className="h-5 w-5 text-primary" />
+                              <Link href={portfolioUrl} target="_blank" className="font-mono text-sm hover:underline">
+                                  {portfolioUrl}
+                              </Link>
+                          </div>
+                          <div className='flex gap-2'>
+                             <Button variant="outline" size="sm">
+                                  <Copy className="h-4 w-4 mr-2"/>
+                                  Copy Link
+                              </Button>
+                              <Button size="sm">
+                                  <Upload className="h-4 w-4 mr-2"/>
+                                  Publish
+                              </Button>
+                          </div>
+                      </CardContent>
+                  </Card>
               </div>
-            )}
-
-            <Separator className="my-8" />
-            
-            <div>
-                <h2 className="text-2xl font-semibold">Build a Public Portfolio</h2>
-                <p className="text-muted-foreground mt-2 text-sm">
-                    Generate a shareable public portfolio page based on the information you&apos;ve provided.
-                </p>
-                <Card className="mt-4 bg-secondary/30">
-                    <CardContent className="p-4 flex items-center justify-between">
-                        <div className="flex items-center gap-3">
-                            <LinkIcon className="h-5 w-5 text-primary" />
-                            <Link href={portfolioUrl} target="_blank" className="font-mono text-sm hover:underline">
-                                {portfolioUrl}
-                            </Link>
-                        </div>
-                        <div className='flex gap-2'>
-                           <Button variant="outline" size="sm">
-                                <Copy className="h-4 w-4 mr-2"/>
-                                Copy Link
-                            </Button>
-                            <Button size="sm">
-                                <Upload className="h-4 w-4 mr-2"/>
-                                Publish
-                            </Button>
-                        </div>
-                    </CardContent>
-                </Card>
-            </div>
-            
-          </CardContent>
-        </Card>
+            </CardContent>
+          </Card>
+        ) : (
+          <Card className="h-full">
+            <CardHeader>
+              <CardTitle>My Resumes</CardTitle>
+              <CardDescription>Select a resume to edit, or create a new one.</CardDescription>
+            </CardHeader>
+            <CardContent>
+                <ResumeList 
+                    resumes={resumes} 
+                    onSelectResume={loadResumeIntoEditor}
+                    onDeleteResume={handleDeleteResume}
+                />
+            </CardContent>
+          </Card>
+        )}
       </div>
 
       {/* Right Preview Panel */}
@@ -635,5 +782,3 @@ export default function PortfolioPage() {
     </div>
   );
 }
-
-    
