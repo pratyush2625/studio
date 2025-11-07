@@ -33,6 +33,7 @@ import {
 } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
 import Link from 'next/link';
+import { Textarea } from '@/components/ui/textarea';
 
 const resumeSections = [
   { name: 'Personal Info', icon: User },
@@ -43,47 +44,46 @@ const resumeSections = [
   { name: 'Certifications', icon: Award },
 ];
 
-type SocialLink = {
-  platform: string;
-  url: string;
-};
-
-type Education = {
-  institute: string;
-  degree: string;
-  startYear: string;
-  endYear: string;
-  gpa: string;
-};
+// Type Definitions
+type SocialLink = { platform: string; url: string };
+type Education = { institute: string; degree: string; startYear: string; endYear: string; gpa: string };
+type Experience = { company: string; title: string; duration: string; description: string };
+type Project = { name: string; tech: string; link: string; description: string };
+type Certification = { title: string; provider: string; date: string };
 
 
 export default function PortfolioPage() {
   const [activeSection, setActiveSection] = useState('Personal Info');
 
-  // State for Personal Info
+  // --- State for all sections ---
   const [name, setName] = useState('Kshatriya Pratyush Singh');
   const [headline, setHeadline] = useState('A brief headline about yourself');
   const [email, setEmail] = useState('pratyush.2625@gmail.com');
   const [phone, setPhone] = useState('+91 87905 36250');
   const [location, setLocation] = useState('Hyderabad, India');
   
-  // State for Social Links
-  const [socialLinks, setSocialLinks] = useState<SocialLink[]>([
-    { platform: 'Github', url: 'https://github.com/pratyush2625' }
-  ]);
+  const [socialLinks, setSocialLinks] = useState<SocialLink[]>([ { platform: 'Github', url: 'https://github.com/pratyush2625' } ]);
   const [newLinkPlatform, setNewLinkPlatform] = useState('');
   const [newLinkUrl, setNewLinkUrl] = useState('');
 
-  // State for Skills & Languages
   const [technicalSkills, setTechnicalSkills] = useState<string[]>(['React.js']);
   const [languages, setLanguages] = useState<string[]>(['English']);
   const [newSkill, setNewSkill] = useState('');
   const [newLanguage, setNewLanguage] = useState('');
   
-  // State for Education
   const [educationEntries, setEducationEntries] = useState<Education[]>([]);
   const [newEducation, setNewEducation] = useState<Education>({ institute: '', degree: '', startYear: '', endYear: '', gpa: '' });
 
+  const [experienceEntries, setExperienceEntries] = useState<Experience[]>([]);
+  const [newExperience, setNewExperience] = useState<Experience>({ company: '', title: '', duration: '', description: '' });
+
+  const [projectEntries, setProjectEntries] = useState<Project[]>([]);
+  const [newProject, setNewProject] = useState<Project>({ name: '', tech: '', link: '', description: '' });
+
+  const [certificationEntries, setCertificationEntries] = useState<Certification[]>([]);
+  const [newCertification, setNewCertification] = useState<Certification>({ title: '', provider: '', date: '' });
+
+  // --- Handlers ---
   const handleAddSocialLink = () => {
     if (newLinkPlatform && newLinkUrl) {
       setSocialLinks([...socialLinks, { platform: newLinkPlatform, url: newLinkUrl }]);
@@ -91,10 +91,7 @@ export default function PortfolioPage() {
       setNewLinkUrl('');
     }
   };
-
-  const handleRemoveSocialLink = (index: number) => {
-    setSocialLinks(socialLinks.filter((_, i) => i !== index));
-  };
+  const handleRemoveSocialLink = (index: number) => setSocialLinks(socialLinks.filter((_, i) => i !== index));
   
   const handleAddSkill = () => {
     if (newSkill.trim()) {
@@ -102,10 +99,7 @@ export default function PortfolioPage() {
       setNewSkill('');
     }
   };
-
-  const handleRemoveSkill = (index: number) => {
-    setTechnicalSkills(technicalSkills.filter((_, i) => i !== index));
-  };
+  const handleRemoveSkill = (index: number) => setTechnicalSkills(technicalSkills.filter((_, i) => i !== index));
 
   const handleAddLanguage = () => {
     if (newLanguage.trim()) {
@@ -113,26 +107,55 @@ export default function PortfolioPage() {
       setNewLanguage('');
     }
   };
-
-  const handleRemoveLanguage = (index: number) => {
-    setLanguages(languages.filter((_, i) => i !== index));
-  };
+  const handleRemoveLanguage = (index: number) => setLanguages(languages.filter((_, i) => i !== index));
 
   const handleEducationInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setNewEducation(prev => ({ ...prev, [name]: value }));
   };
-
   const handleAddEducation = () => {
     if (newEducation.institute && newEducation.degree) {
       setEducationEntries([...educationEntries, newEducation]);
       setNewEducation({ institute: '', degree: '', startYear: '', endYear: '', gpa: '' });
     }
   };
+  const handleRemoveEducation = (index: number) => setEducationEntries(educationEntries.filter((_, i) => i !== index));
 
-  const handleRemoveEducation = (index: number) => {
-    setEducationEntries(educationEntries.filter((_, i) => i !== index));
+  const handleExperienceInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setNewExperience(prev => ({ ...prev, [name]: value }));
   };
+  const handleAddExperience = () => {
+    if (newExperience.company && newExperience.title) {
+      setExperienceEntries([...experienceEntries, newExperience]);
+      setNewExperience({ company: '', title: '', duration: '', description: '' });
+    }
+  };
+  const handleRemoveExperience = (index: number) => setExperienceEntries(experienceEntries.filter((_, i) => i !== index));
+  
+  const handleProjectInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setNewProject(prev => ({ ...prev, [name]: value }));
+  };
+  const handleAddProject = () => {
+    if (newProject.name && newProject.tech) {
+      setProjectEntries([...projectEntries, newProject]);
+      setNewProject({ name: '', tech: '', link: '', description: '' });
+    }
+  };
+  const handleRemoveProject = (index: number) => setProjectEntries(projectEntries.filter((_, i) => i !== index));
+
+  const handleCertificationInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setNewCertification(prev => ({ ...prev, [name]: value }));
+  };
+  const handleAddCertification = () => {
+    if (newCertification.title && newCertification.provider) {
+      setCertificationEntries([...certificationEntries, newCertification]);
+      setNewCertification({ title: '', provider: '', date: '' });
+    }
+  };
+  const handleRemoveCertification = (index: number) => setCertificationEntries(certificationEntries.filter((_, i) => i !== index));
 
 
   return (
@@ -350,15 +373,128 @@ export default function PortfolioPage() {
               </div>
             )}
 
-
-            {/* Other sections will be rendered here based on activeSection */}
-            {activeSection !== 'Personal Info' && activeSection !== 'Skills & Languages' && activeSection !== 'Education' &&(
-              <div className="flex items-center justify-center h-64">
-                <p className="text-muted-foreground">
-                  Editing section: {activeSection}
-                </p>
+            {activeSection === 'Experience' && (
+              <div>
+                <h2 className="text-2xl font-semibold">Work Experience</h2>
+                <div className="space-y-4 mt-4">
+                  {experienceEntries.map((entry, index) => (
+                    <Card key={index} className="bg-secondary/30">
+                      <CardHeader className="flex flex-row items-center justify-between py-3">
+                         <div>
+                            <CardTitle className="text-base">{entry.title}</CardTitle>
+                            <p className="text-sm font-normal text-muted-foreground">{entry.company}</p>
+                        </div>
+                        <Button variant="ghost" size="icon" className="h-6 w-6" onClick={() => handleRemoveExperience(index)}>
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </CardHeader>
+                    </Card>
+                  ))}
+                </div>
+                <div className="mt-6 border-t pt-6 space-y-4">
+                  <div className="grid sm:grid-cols-2 gap-4">
+                    <div className="grid gap-2">
+                      <Label htmlFor="company">Company</Label>
+                      <Input name="company" value={newExperience.company} onChange={handleExperienceInputChange} placeholder="e.g., Google" />
+                    </div>
+                    <div className="grid gap-2">
+                      <Label htmlFor="title">Job Title</Label>
+                      <Input name="title" value={newExperience.title} onChange={handleExperienceInputChange} placeholder="e.g., Software Engineer Intern" />
+                    </div>
+                  </div>
+                   <div className="grid gap-2">
+                      <Label htmlFor="duration">Duration</Label>
+                      <Input name="duration" value={newExperience.duration} onChange={handleExperienceInputChange} placeholder="e.g., May 2023 - Aug 2023" />
+                    </div>
+                  <div className="grid gap-2">
+                    <Label htmlFor="description">Description</Label>
+                    <Textarea name="description" value={newExperience.description} onChange={handleExperienceInputChange} placeholder="Describe your roles and achievements..." />
+                  </div>
+                  <Button variant="outline" className="w-full sm:w-auto" onClick={handleAddExperience}>
+                    <Plus className="h-4 w-4 mr-2" /> Add Experience
+                  </Button>
+                </div>
               </div>
             )}
+
+            {activeSection === 'Projects' && (
+              <div>
+                <h2 className="text-2xl font-semibold">Projects</h2>
+                <div className="space-y-4 mt-4">
+                  {projectEntries.map((entry, index) => (
+                    <Card key={index} className="bg-secondary/30">
+                      <CardHeader className="flex flex-row items-center justify-between py-3">
+                         <CardTitle className="text-base">{entry.name}</CardTitle>
+                        <Button variant="ghost" size="icon" className="h-6 w-6" onClick={() => handleRemoveProject(index)}>
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </CardHeader>
+                    </Card>
+                  ))}
+                </div>
+                <div className="mt-6 border-t pt-6 space-y-4">
+                  <div className="grid sm:grid-cols-2 gap-4">
+                    <div className="grid gap-2">
+                      <Label htmlFor="name">Project Name</Label>
+                      <Input name="name" value={newProject.name} onChange={handleProjectInputChange} placeholder="e.g., Portfolio Website" />
+                    </div>
+                     <div className="grid gap-2">
+                      <Label htmlFor="tech">Technologies Used</Label>
+                      <Input name="tech" value={newProject.tech} onChange={handleProjectInputChange} placeholder="e.g., Next.js, Tailwind CSS" />
+                    </div>
+                  </div>
+                  <div className="grid gap-2">
+                    <Label htmlFor="link">Project Link</Label>
+                    <Input name="link" value={newProject.link} onChange={handleProjectInputChange} placeholder="e.g., https://github.com/user/project" />
+                  </div>
+                  <div className="grid gap-2">
+                    <Label htmlFor="description">Description</Label>
+                    <Textarea name="description" value={newProject.description} onChange={handleProjectInputChange} placeholder="Describe your project..." />
+                  </div>
+                  <Button variant="outline" className="w-full sm:w-auto" onClick={handleAddProject}>
+                    <Plus className="h-4 w-4 mr-2" /> Add Project
+                  </Button>
+                </div>
+              </div>
+            )}
+
+            {activeSection === 'Certifications' && (
+              <div>
+                <h2 className="text-2xl font-semibold">Certifications</h2>
+                 <div className="space-y-4 mt-4">
+                  {certificationEntries.map((entry, index) => (
+                    <Card key={index} className="bg-secondary/30">
+                      <CardHeader className="flex flex-row items-center justify-between py-3">
+                         <CardTitle className="text-base">{entry.title}</CardTitle>
+                        <Button variant="ghost" size="icon" className="h-6 w-6" onClick={() => handleRemoveCertification(index)}>
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </CardHeader>
+                    </Card>
+                  ))}
+                </div>
+                <div className="mt-6 border-t pt-6 space-y-4">
+                  <div className="grid sm:grid-cols-2 gap-4">
+                    <div className="grid gap-2">
+                      <Label htmlFor="title">Certification Title</Label>
+                      <Input name="title" value={newCertification.title} onChange={handleCertificationInputChange} placeholder="e.g., AWS Certified Cloud Practitioner" />
+                    </div>
+                    <div className="grid gap-2">
+                      <Label htmlFor="provider">Provider</Label>
+                      <Input name="provider" value={newCertification.provider} onChange={handleCertificationInputChange} placeholder="e.g., Amazon Web Services" />
+                    </div>
+                  </div>
+                  <div className="grid gap-2">
+                      <Label htmlFor="date">Date Issued</Label>
+                      <Input name="date" value={newCertification.date} onChange={handleCertificationInputChange} placeholder="e.g., June 2024" />
+                  </div>
+                  <Button variant="outline" className="w-full sm:w-auto" onClick={handleAddCertification}>
+                    <Plus className="h-4 w-4 mr-2" /> Add Certification
+                  </Button>
+                </div>
+              </div>
+            )}
+            
           </CardContent>
         </Card>
       </div>
@@ -383,7 +519,6 @@ export default function PortfolioPage() {
             </Button>
           </CardHeader>
           <CardContent className="h-[70vh] bg-secondary/30 rounded-b-lg p-6 overflow-y-auto">
-            {/* Resume Preview Placeholder */}
             <div className="bg-white p-8 rounded-lg shadow-md h-full text-sm">
                 <h3 className="text-xl font-bold">{name}</h3>
                 <p className="text-muted-foreground mt-1">{headline}</p>
@@ -437,6 +572,63 @@ export default function PortfolioPage() {
                     </div>
                 </div>
                 )}
+                
+                {experienceEntries.length > 0 && (
+                <div className="mt-6">
+                    <h4 className="font-bold text-primary text-xs tracking-widest uppercase">Experience</h4>
+                    <div className="w-full h-px bg-border my-2"></div>
+                    <div className="space-y-3">
+                        {experienceEntries.map((entry, index) => (
+                            <div key={index}>
+                                <div className="flex justify-between items-baseline">
+                                    <h5 className="font-semibold">{entry.title}</h5>
+                                    <p className="text-xs text-muted-foreground">{entry.duration}</p>
+                                </div>
+                                <p className="font-medium text-muted-foreground">{entry.company}</p>
+                                <p className="text-xs text-muted-foreground mt-1 whitespace-pre-wrap">{entry.description}</p>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+                )}
+
+                {projectEntries.length > 0 && (
+                <div className="mt-6">
+                    <h4 className="font-bold text-primary text-xs tracking-widest uppercase">Projects</h4>
+                    <div className="w-full h-px bg-border my-2"></div>
+                    <div className="space-y-3">
+                        {projectEntries.map((entry, index) => (
+                            <div key={index}>
+                                <div className="flex justify-between items-baseline">
+                                    <h5 className="font-semibold">{entry.name}</h5>
+                                    <a href={entry.link} target="_blank" rel="noreferrer" className="text-xs text-primary hover:underline">View Project</a>
+                                </div>
+                                <p className="text-sm text-muted-foreground">{entry.tech}</p>
+                                <p className="text-xs text-muted-foreground mt-1 whitespace-pre-wrap">{entry.description}</p>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+                )}
+
+                {certificationEntries.length > 0 && (
+                <div className="mt-6">
+                    <h4 className="font-bold text-primary text-xs tracking-widest uppercase">Certifications</h4>
+                    <div className="w-full h-px bg-border my-2"></div>
+                    <div className="space-y-3">
+                        {certificationEntries.map((entry, index) => (
+                            <div key={index}>
+                                <div className="flex justify-between items-baseline">
+                                    <h5 className="font-semibold">{entry.title}</h5>
+                                    <p className="text-xs text-muted-foreground">{entry.date}</p>
+                                </div>
+                                <p className="text-muted-foreground">{entry.provider}</p>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+                )}
+
 
             </div>
           </CardContent>
