@@ -10,7 +10,6 @@ import {
   CardTitle,
 } from '../../../components/ui/card';
 import { Progress } from '../../../components/ui/progress';
-import { Separator } from '../../../components/ui/separator';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../../components/ui/tabs';
 import { PlaceHolderImages } from '../../../lib/placeholder-images';
 import { userSkills, userProjects } from '../../../lib/data';
