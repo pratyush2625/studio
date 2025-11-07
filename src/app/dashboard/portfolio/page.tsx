@@ -84,23 +84,35 @@ export default function PortfolioPage() {
             </p>
           </CardHeader>
           <CardContent className="space-y-8">
-            <div>
-              <h2 className="text-2xl font-semibold">Profile Info</h2>
-              <div className="space-y-4 mt-4">
-                <div className="grid gap-2">
-                  <Label htmlFor="name">Name</Label>
-                  <Input id="name" placeholder="Kshatriya Pratyush Singh" />
-                </div>
-                <div className="grid gap-2">
-                  <Label htmlFor="headline">Subtitle/Headline</Label>
-                  <Input id="headline" placeholder="A brief headline about yourself" />
-                </div>
-                <div className="grid gap-2">
-                  <Label htmlFor="email">Email</Label>
-                  <Input id="email" type="email" placeholder="pratyush.2625@gmail.com" />
+            {activeSection === 'Personal Info' && (
+              <div>
+                <h2 className="text-2xl font-semibold">Profile Info</h2>
+                <div className="space-y-4 mt-4">
+                  <div className="grid gap-2">
+                    <Label htmlFor="name">Name</Label>
+                    <Input id="name" placeholder="Kshatriya Pratyush Singh" />
+                  </div>
+                  <div className="grid gap-2">
+                    <Label htmlFor="headline">Subtitle/Headline</Label>
+                    <Input id="headline" placeholder="A brief headline about yourself" />
+                  </div>
+                  <div className="grid gap-2">
+                    <Label htmlFor="email">Email</Label>
+                    <Input id="email" type="email" placeholder="pratyush.2625@gmail.com" />
+                  </div>
                 </div>
               </div>
-            </div>
+            )}
+
+            {/* Other sections will be rendered here based on activeSection */}
+            {activeSection !== 'Personal Info' && (
+              <div className="flex items-center justify-center h-64">
+                <p className="text-muted-foreground">
+                  Editing section: {activeSection}
+                </p>
+              </div>
+            )}
+
 
             <div>
               <h2 className="text-2xl font-semibold">Contact Info</h2>
@@ -204,5 +216,3 @@ export default function PortfolioPage() {
     </div>
   );
 }
-
-    
