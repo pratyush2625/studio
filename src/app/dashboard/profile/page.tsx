@@ -90,7 +90,7 @@ export default function ProfilePage() {
               <CardHeader>
                 <CardTitle>My Projects</CardTitle>
                 <CardDescription>A showcase of your best work.</CardDescription>
-              </Header>
+              </CardHeader>
               <CardContent className="grid gap-6 sm:grid-cols-2">
                 {userProjects.map((project) => {
                   const projectImage = PlaceHolderImages.find(p => p.id === project.imageId);
@@ -118,7 +118,7 @@ export default function ProfilePage() {
                         </CardContent>
                       </Card>
                     </Link>
-                  )
+                  );
                 })}
               </CardContent>
             </Card>
