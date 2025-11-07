@@ -20,7 +20,9 @@ import { Label } from '@/components/ui/label';
 import {
   Card,
   CardContent,
+  CardDescription,
   CardHeader,
+  CardTitle,
 } from '@/components/ui/card';
 import {
   Select,
@@ -46,6 +48,15 @@ type SocialLink = {
   url: string;
 };
 
+type Education = {
+  institute: string;
+  degree: string;
+  startYear: string;
+  endYear: string;
+  gpa: string;
+};
+
+
 export default function PortfolioPage() {
   const [activeSection, setActiveSection] = useState('Personal Info');
 
@@ -68,6 +79,10 @@ export default function PortfolioPage() {
   const [languages, setLanguages] = useState<string[]>(['English']);
   const [newSkill, setNewSkill] = useState('');
   const [newLanguage, setNewLanguage] = useState('');
+  
+  // State for Education
+  const [educationEntries, setEducationEntries] = useState<Education[]>([]);
+  const [newEducation, setNewEducation] = useState<Education>({ institute: '', degree: '', startYear: '', endYear: '', gpa: '' });
 
   const handleAddSocialLink = () => {
     if (newLinkPlatform && newLinkUrl) {
@@ -101,6 +116,22 @@ export default function PortfolioPage() {
 
   const handleRemoveLanguage = (index: number) => {
     setLanguages(languages.filter((_, i) => i !== index));
+  };
+
+  const handleEducationInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setNewEducation(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleAddEducation = () => {
+    if (newEducation.institute && newEducation.degree) {
+      setEducationEntries([...educationEntries, newEducation]);
+      setNewEducation({ institute: '', degree: '', startYear: '', endYear: '', gpa: '' });
+    }
+  };
+
+  const handleRemoveEducation = (index: number) => {
+    setEducationEntries(educationEntries.filter((_, i) => i !== index));
   };
 
 
@@ -268,8 +299,60 @@ export default function PortfolioPage() {
               </>
             )}
 
+            {activeSection === 'Education' && (
+              <div>
+                <h2 className="text-2xl font-semibold">Education</h2>
+                <div className="space-y-4 mt-4">
+                  {educationEntries.map((entry, index) => (
+                    <Card key={index} className="bg-secondary/30">
+                      <CardHeader className="flex flex-row items-center justify-between py-3">
+                        <CardTitle className="text-base">{entry.institute}</CardTitle>
+                        <Button variant="ghost" size="icon" className="h-6 w-6" onClick={() => handleRemoveEducation(index)}>
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </CardHeader>
+                      <CardContent className="pt-0 text-sm">
+                        <p>{entry.degree}</p>
+                        <p className="text-muted-foreground">{entry.startYear} - {entry.endYear}</p>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+                <div className="mt-6 border-t pt-6 space-y-4">
+                  <div className="grid sm:grid-cols-2 gap-4">
+                    <div className="grid gap-2">
+                      <Label htmlFor="institute">Institute</Label>
+                      <Input name="institute" value={newEducation.institute} onChange={handleEducationInputChange} placeholder="e.g., Stanford University" />
+                    </div>
+                    <div className="grid gap-2">
+                      <Label htmlFor="degree">Degree/Program</Label>
+                      <Input name="degree" value={newEducation.degree} onChange={handleEducationInputChange} placeholder="e.g., B.S. in Computer Science" />
+                    </div>
+                  </div>
+                  <div className="grid sm:grid-cols-3 gap-4">
+                    <div className="grid gap-2">
+                      <Label htmlFor="startYear">Start Year</Label>
+                      <Input name="startYear" value={newEducation.startYear} onChange={handleEducationInputChange} placeholder="2020" />
+                    </div>
+                    <div className="grid gap-2">
+                      <Label htmlFor="endYear">End Year</Label>
+                      <Input name="endYear" value={newEducation.endYear} onChange={handleEducationInputChange} placeholder="2024" />
+                    </div>
+                    <div className="grid gap-2">
+                      <Label htmlFor="gpa">GPA/Percentage</Label>
+                      <Input name="gpa" value={newEducation.gpa} onChange={handleEducationInputChange} placeholder="e.g., 3.8/4.0" />
+                    </div>
+                  </div>
+                  <Button variant="outline" className="w-full sm:w-auto" onClick={handleAddEducation}>
+                    <Plus className="h-4 w-4 mr-2" /> Add Education
+                  </Button>
+                </div>
+              </div>
+            )}
+
+
             {/* Other sections will be rendered here based on activeSection */}
-            {activeSection !== 'Personal Info' && activeSection !== 'Skills & Languages' && (
+            {activeSection !== 'Personal Info' && activeSection !== 'Skills & Languages' && activeSection !== 'Education' &&(
               <div className="flex items-center justify-center h-64">
                 <p className="text-muted-foreground">
                   Editing section: {activeSection}
@@ -335,6 +418,26 @@ export default function PortfolioPage() {
                         </div>
                     </div>
                 </div>
+
+                {educationEntries.length > 0 && (
+                <div className="mt-6">
+                    <h4 className="font-bold text-primary text-xs tracking-widest uppercase">Education</h4>
+                    <div className="w-full h-px bg-border my-2"></div>
+                    <div className="space-y-3">
+                        {educationEntries.map((entry, index) => (
+                            <div key={index}>
+                                <div className="flex justify-between items-baseline">
+                                    <h5 className="font-semibold">{entry.institute}</h5>
+                                    <p className="text-xs text-muted-foreground">{entry.startYear} - {entry.endYear}</p>
+                                </div>
+                                <p className="text-muted-foreground">{entry.degree}</p>
+                                {entry.gpa && <p className="text-xs text-muted-foreground">GPA: {entry.gpa}</p>}
+                            </div>
+                        ))}
+                    </div>
+                </div>
+                )}
+
             </div>
           </CardContent>
         </Card>
