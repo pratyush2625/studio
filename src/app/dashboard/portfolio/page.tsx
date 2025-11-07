@@ -1,7 +1,9 @@
 
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
 import {
   User,
   Sparkles,
@@ -20,9 +22,7 @@ import { Label } from '@/components/ui/label';
 import {
   Card,
   CardContent,
-  CardDescription,
   CardHeader,
-  CardTitle,
 } from '@/components/ui/card';
 import {
   Select,
@@ -72,6 +72,8 @@ export type ResumeData = {
 export default function PortfolioPage() {
   const [activeSection, setActiveSection] = useState('Personal Info');
   const [template, setTemplate] = useState('classic');
+  const resumePreviewRef = useRef<HTMLDivElement>(null);
+
 
   // --- State for all sections ---
   const [name, setName] = useState('Kshatriya Pratyush Singh');
@@ -180,6 +182,49 @@ export default function PortfolioPage() {
     technicalSkills, languages, educationEntries, experienceEntries,
     projectEntries, certificationEntries
   }
+
+  const handleDownloadPdf = () => {
+    const input = resumePreviewRef.current;
+    if (!input) return;
+
+    html2canvas(input, { scale: 2 }).then((canvas) => {
+      const imgData = canvas.toDataURL('image/jpeg', 1.0);
+      const pdf = new jsPDF({
+        orientation: 'p',
+        unit: 'mm',
+        format: 'a4',
+      });
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = pdf.internal.pageSize.getHeight();
+      const canvasWidth = canvas.width;
+      const canvasHeight = canvas.height;
+      const ratio = canvasWidth / canvasHeight;
+      const width = pdfWidth;
+      const height = width / ratio;
+
+      // If the height is greater than the page height, we'll need to split it
+      if (height > pdfHeight) {
+         let position = 0;
+         let pageHeight = (pdfWidth / canvas.width) * canvas.height;
+         let heightLeft = pageHeight;
+
+        pdf.addImage(imgData, 'JPEG', 0, position, pdfWidth, pageHeight);
+        heightLeft -= pdfHeight;
+
+        while(heightLeft > 0) {
+          position = heightLeft - pageHeight;
+          pdf.addPage();
+          pdf.addImage(imgData, 'JPEG', 0, position, pdfWidth, pageHeight);
+          heightLeft -= pdfHeight;
+        }
+
+      } else {
+         pdf.addImage(imgData, 'JPEG', 0, 0, pdfWidth, height);
+      }
+     
+      pdf.save('resume.pdf');
+    });
+  };
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 h-full">
@@ -352,7 +397,7 @@ export default function PortfolioPage() {
                   {educationEntries.map((entry, index) => (
                     <Card key={index} className="bg-secondary/30">
                       <CardHeader className="flex flex-row items-center justify-between py-3">
-                        <CardTitle className="text-base">{entry.institute}</CardTitle>
+                        <h3 className="font-semibold text-base">{entry.institute}</h3>
                         <Button variant="ghost" size="icon" className="h-6 w-6" onClick={() => handleRemoveEducation(index)}>
                           <Trash2 className="h-4 w-4" />
                         </Button>
@@ -404,7 +449,7 @@ export default function PortfolioPage() {
                     <Card key={index} className="bg-secondary/30">
                       <CardHeader className="flex flex-row items-center justify-between py-3">
                          <div>
-                            <CardTitle className="text-base">{entry.title}</CardTitle>
+                            <h3 className="font-semibold text-base">{entry.title}</h3>
                             <p className="text-sm font-normal text-muted-foreground">{entry.company}</p>
                         </div>
                         <Button variant="ghost" size="icon" className="h-6 w-6" onClick={() => handleRemoveExperience(index)}>
@@ -447,7 +492,7 @@ export default function PortfolioPage() {
                   {projectEntries.map((entry, index) => (
                     <Card key={index} className="bg-secondary/30">
                       <CardHeader className="flex flex-row items-center justify-between py-3">
-                         <CardTitle className="text-base">{entry.name}</CardTitle>
+                         <h3 className="font-semibold text-base">{entry.name}</h3>
                         <Button variant="ghost" size="icon" className="h-6 w-6" onClick={() => handleRemoveProject(index)}>
                           <Trash2 className="h-4 w-4" />
                         </Button>
@@ -488,7 +533,7 @@ export default function PortfolioPage() {
                   {certificationEntries.map((entry, index) => (
                     <Card key={index} className="bg-secondary/30">
                       <CardHeader className="flex flex-row items-center justify-between py-3">
-                         <CardTitle className="text-base">{entry.title}</CardTitle>
+                         <h3 className="font-semibold text-base">{entry.title}</h3>
                         <Button variant="ghost" size="icon" className="h-6 w-6" onClick={() => handleRemoveCertification(index)}>
                           <Trash2 className="h-4 w-4" />
                         </Button>
@@ -536,15 +581,17 @@ export default function PortfolioPage() {
                 <SelectItem value="minimal">Minimal</SelectItem>
               </SelectContent>
             </Select>
-            <Button>
+            <Button onClick={handleDownloadPdf}>
               <FileDown className="h-4 w-4 mr-2" />
               Download PDF
             </Button>
           </CardHeader>
           <CardContent className="h-[70vh] bg-secondary/30 rounded-b-lg p-6 overflow-y-auto">
-            {template === 'classic' && <ClassicTemplate {...resumeData} />}
-            {template === 'modern' && <ModernTemplate {...resumeData} />}
-            {template === 'minimal' && <MinimalTemplate {...resumeData} />}
+            <div ref={resumePreviewRef}>
+              {template === 'classic' && <ClassicTemplate {...resumeData} />}
+              {template === 'modern' && <ModernTemplate {...resumeData} />}
+              {template === 'minimal' && <MinimalTemplate {...resumeData} />}
+            </div>
           </CardContent>
         </Card>
       </div>
