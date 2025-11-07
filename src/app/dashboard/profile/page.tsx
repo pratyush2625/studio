@@ -1,3 +1,5 @@
+
+
 import Image from 'next/image';
 import { Badge } from '../../../components/ui/badge';
 import { Button } from '../../../components/ui/button';
@@ -88,32 +90,34 @@ export default function ProfilePage() {
               <CardHeader>
                 <CardTitle>My Projects</CardTitle>
                 <CardDescription>A showcase of your best work.</CardDescription>
-              </CardHeader>
+              </Header>
               <CardContent className="grid gap-6 sm:grid-cols-2">
                 {userProjects.map((project) => {
                   const projectImage = PlaceHolderImages.find(p => p.id === project.imageId);
                   return (
-                    <Card key={project.id}>
-                       <CardHeader className="p-0">
-                        {projectImage && (
-                          <Image
-                            src={projectImage.imageUrl}
-                            alt={project.title}
-                            width={600}
-                            height={400}
-                            data-ai-hint={projectImage.imageHint}
-                            className="rounded-t-lg object-cover aspect-[3/2]"
-                          />
-                        )}
-                      </CardHeader>
-                      <CardContent className="p-4">
-                        <h3 className="font-semibold">{project.title}</h3>
-                        <p className="text-sm text-muted-foreground mt-1 line-clamp-2">{project.description}</p>
-                        <div className="flex flex-wrap gap-2 mt-3">
-                            {project.tags.map(tag => <Badge key={tag} variant="secondary">{tag}</Badge>)}
-                        </div>
-                      </CardContent>
-                    </Card>
+                    <Link href={project.url} key={project.id}>
+                      <Card>
+                         <CardHeader className="p-0">
+                          {projectImage && (
+                            <Image
+                              src={projectImage.imageUrl}
+                              alt={project.title}
+                              width={600}
+                              height={400}
+                              data-ai-hint={projectImage.imageHint}
+                              className="rounded-t-lg object-cover aspect-[3/2]"
+                            />
+                          )}
+                        </CardHeader>
+                        <CardContent className="p-4">
+                          <h3 className="font-semibold">{project.title}</h3>
+                          <p className="text-sm text-muted-foreground mt-1 line-clamp-2">{project.description}</p>
+                          <div className="flex flex-wrap gap-2 mt-3">
+                              {project.tags.map(tag => <Badge key={tag} variant="secondary">{tag}</Badge>)}
+                          </div>
+                        </CardContent>
+                      </Card>
+                    </Link>
                   )
                 })}
               </CardContent>
