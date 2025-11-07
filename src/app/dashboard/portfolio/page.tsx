@@ -1,5 +1,3 @@
-
-
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
@@ -27,6 +25,7 @@ import {
   Linkedin,
   Twitter,
   Share2,
+  BookUser,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -54,15 +53,13 @@ import { ModernTemplate } from '@/components/portfolio/modern-template';
 import { MinimalTemplate } from '@/components/portfolio/minimal-template';
 import { Separator } from '@/components/ui/separator';
 import { ResumeList } from '@/components/portfolio/resume-list';
-import { Progress } from '@/components/ui/progress';
-import { userSkills } from '@/lib/data';
-import Image from 'next/image';
-import { PlaceHolderImages } from '@/lib/placeholder-images';
+import { PortfolioView } from '@/components/portfolio/portfolio-view';
 
 
 const resumeSections = [
   { name: 'Resume Builder', icon: FilePlus },
   { name: 'My Resumes', icon: File },
+  { name: 'Portfolio', icon: BookUser },
 ];
 
 const builderSections = [
@@ -124,6 +121,7 @@ export default function PortfolioPage() {
 
   const [resumes, setResumes] = useState<ResumeData[]>([initialResumeData]);
   const [currentResume, setCurrentResume] = useState<ResumeData>(initialResumeData);
+  const [portfolioResume, setPortfolioResume] = useState<ResumeData | null>(null);
 
   // --- State for all sections ---
   const [resumeName, setResumeName] = useState(currentResume.resumeName);
@@ -337,7 +335,6 @@ export default function PortfolioPage() {
       const width = pdfWidth;
       const height = width / ratio;
 
-      // If the height is greater than the page height, we'll need to split it
       if (height > pdfHeight) {
          let position = 0;
          let pageHeight = (pdfWidth / canvas.width) * canvas.height;
@@ -361,8 +358,9 @@ export default function PortfolioPage() {
     });
   };
 
-  const portfolioUrl = `https://skillgraph.io/${name.toLowerCase().replace(/\s/g, '-')}`;
-  const avatarImage = PlaceHolderImages.find(p => p.id === 'avatar');
+  const handleSetPortfolio = (resume: ResumeData) => {
+    setPortfolioResume(resume);
+  }
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 h-full">
@@ -398,25 +396,12 @@ export default function PortfolioPage() {
               <Separator className="my-4"/>
 
                 <div className='px-2'>
-                    <h3 className="text-sm font-semibold mb-2 text-muted-foreground px-2">PORTFOLIO</h3>
-                    <div className="space-y-4 mt-4">
-                        <Card className="bg-secondary/30 border-dashed">
-                            <CardContent className="p-4">
-                                <p className="text-sm text-muted-foreground">
-                                    Your public portfolio is automatically updated with your resume data.
-                                </p>
-                                <div className="mt-4 flex items-center justify-between">
-                                    <Link href={portfolioUrl} target="_blank" className="font-mono text-sm hover:underline text-primary flex items-center gap-2">
-                                        <LinkIcon className="h-4 w-4" />
-                                        View Live
-                                    </Link>
-                                    <Button size="sm" variant="outline">
-                                        <Copy className="h-4 w-4"/>
-                                    </Button>
-                                </div>
-                            </CardContent>
-                        </Card>
-
+                    <h3 className="text-sm font-semibold mb-2 text-muted-foreground px-2">PORTFOLIO ACTIONS</h3>
+                    <div className="space-y-2 mt-4">
+                        <Button className="w-full" variant="outline" onClick={() => setActiveView('Portfolio')}>
+                            <LinkIcon className="h-4 w-4 mr-2"/>
+                            Manage Public Portfolio
+                        </Button>
                         <Button className="w-full">
                             <Upload className="h-4 w-4 mr-2"/>
                             Publish Changes
@@ -431,7 +416,7 @@ export default function PortfolioPage() {
 
       {/* Middle Content */}
       <div className="lg:col-span-9 xl:col-span-10">
-        {activeView === 'Resume Builder' ? (
+        {activeView === 'Resume Builder' && (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <div className="col-span-1">
               <Card className="h-full">
@@ -783,7 +768,9 @@ export default function PortfolioPage() {
               </Card>
             </div>
           </div>
-        ) : (
+        )}
+        
+        {activeView === 'My Resumes' && (
           <Card className="h-full">
             <CardHeader>
               <CardTitle>My Resumes</CardTitle>
@@ -798,125 +785,38 @@ export default function PortfolioPage() {
             </CardContent>
           </Card>
         )}
-      </div>
-
-       {/* Public Portfolio Preview - shown below main content */}
-      <div className="lg:col-span-12 mt-8">
-            <Separator/>
-            <div className="my-8">
-                <h2 className="text-3xl font-bold tracking-tight">Public Portfolio Preview</h2>
-                <p className="text-muted-foreground mt-2">
-                    This is a preview of your public portfolio page. Publish your changes to make them live.
-                </p>
-            </div>
-
-             <div className="grid gap-8 md:grid-cols-3 border rounded-lg p-4 lg:p-8 bg-card">
-                <div className="md:col-span-1 space-y-6">
-                    <Card>
-                    <CardContent className="pt-6 flex flex-col items-center text-center">
-                        {avatarImage && (
-                        <Image
-                            src={avatarImage.imageUrl}
-                            width={96}
-                            height={96}
-                            alt="User Avatar"
-                            data-ai-hint={avatarImage.imageHint}
-                            className="rounded-full mb-4"
-                        />
-                        )}
-                        <h2 className="text-2xl font-bold">{name}</h2>
-                        <p className="text-muted-foreground">{headline}</p>
-                        <div className="flex items-center gap-4 mt-4">
-                            {socialLinks.find(l => l.platform === 'Twitter') && <Button variant="ghost" size="icon"><Twitter className="h-5 w-5"/></Button>}
-                            {socialLinks.find(l => l.platform === 'Github') && <Button variant="ghost" size="icon"><Github className="h-5 w-5"/></Button>}
-                            {socialLinks.find(l => l.platform === 'LinkedIn') && <Button variant="ghost" size="icon"><Linkedin className="h-5 w-5"/></Button>}
-                        </div>
-                    </CardContent>
-                    <CardFooter className="flex gap-2">
-                        <Button className="flex-1" onClick={handleDownloadPdf}>
-                            <FileDown className='h-4 w-4 mr-2'/> Download Resume
-                        </Button>
-                        <Button variant="outline" size="icon"><Share2 className="h-4 w-4" /></Button>
-                    </CardFooter>
-                    </Card>
-                    <Card>
-                        <CardHeader>
-                            <CardTitle>About Me</CardTitle>
-                        </CardHeader>
-                        <CardContent>
-                             <Textarea
-                                value={aboutMe}
-                                onChange={(e) => setAboutMe(e.target.value)}
-                                placeholder="Write a short bio about yourself..."
-                                className="text-sm text-muted-foreground"
+        
+        {activeView === 'Portfolio' && (
+            <Card>
+                <CardHeader>
+                    <CardTitle>Build Your Public Portfolio</CardTitle>
+                    <CardDescription>Select a resume to populate your portfolio. You can customize the content afterwards.</CardDescription>
+                </CardHeader>
+                <CardContent>
+                    {!portfolioResume ? (
+                        <div>
+                            <h3 className="font-semibold text-lg mb-4">Step 1: Select a Resume</h3>
+                             <ResumeList 
+                                resumes={resumes} 
+                                onSelectResume={handleSetPortfolio}
+                                onDeleteResume={handleDeleteResume}
                             />
-                        </CardContent>
-                    </Card>
-                     <Card>
-                        <CardHeader>
-                            <CardTitle>My Skills</CardTitle>
-                        </CardHeader>
-                        <CardContent className="space-y-4">
-                            {technicalSkills.map((skill) => {
-                                const foundSkill = userSkills.find(s => s.name === skill);
-                                return (
-                                <div key={skill} className="space-y-2">
-                                    <div className="flex justify-between">
-                                    <span className="font-medium">{skill}</span>
-                                    <span className="text-sm text-muted-foreground">{foundSkill?.level || 50}%</span>
-                                    </div>
-                                    <Progress value={foundSkill?.level || 50} aria-label={`${skill} proficiency`} />
-                                </div>
-                                )
-                            })}
-                        </CardContent>
-                    </Card>
-                </div>
-                <div className="md:col-span-2">
-                     <Card>
-                        <CardHeader>
-                            <CardTitle>My Projects</CardTitle>
-                            <CardDescription>A showcase of your best work, populated from your resume.</CardDescription>
-                        </CardHeader>
-                        <CardContent className="grid gap-6 sm:grid-cols-2">
-                            {projectEntries.map((project, index) => {
-                                const projectImage = PlaceHolderImages.find(p => p.id === 'project-1');
-                                return (
-                                    <Link href={project.link || '#'} key={index}>
-                                    <Card>
-                                        <CardHeader className="p-0">
-                                        {projectImage && (
-                                            <Image
-                                            src={projectImage.imageUrl}
-                                            alt={project.name}
-                                            width={600}
-                                            height={400}
-                                            data-ai-hint={projectImage.imageHint}
-                                            className="rounded-t-lg object-cover aspect-[3/2]"
-                                            />
-                                        )}
-                                        </CardHeader>
-                                        <CardContent className="p-4">
-                                        <h3 className="font-semibold">{project.name}</h3>
-                                        <p className="text-sm text-muted-foreground mt-1 line-clamp-2">{project.description}</p>
-                                        <div className="flex flex-wrap gap-2 mt-3">
-                                            {project.tech.split(',').map(tag => <Badge key={tag} variant="secondary">{tag.trim()}</Badge>)}
-                                        </div>
-                                        </CardContent>
-                                    </Card>
-                                    </Link>
-                                );
-                            })}
-                        </CardContent>
-                        </Card>
-                </div>
-                </div>
+                        </div>
+                    ) : (
+                        <div>
+                             <PortfolioView 
+                                resumeData={portfolioResume} 
+                                onDownloadPdf={handleDownloadPdf}
+                                aboutMe={aboutMe}
+                                setAboutMe={setAboutMe}
+                                onClearPortfolio={() => setPortfolioResume(null)}
+                            />
+                        </div>
+                    )}
+                </CardContent>
+            </Card>
+        )}
       </div>
     </div>
   );
 }
-
-
-    
-
-    
