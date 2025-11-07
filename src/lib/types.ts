@@ -50,3 +50,27 @@ export type Internship = {
     tags: string[];
     url: string;
 }
+
+
+// From portfolio/page.tsx
+export type SocialLink = { platform: string; url: string };
+export type Education = { institute: string; degree: string; startYear: string; endYear: string; gpa: string };
+export type Experience = { company: string; title: string; duration: string; description: string };
+export type ProjectEntry = { name: string; tech: string; link: string; description: string };
+export type Certification = { title: string; provider: string; date: string };
+export type ResumeData = {
+    id: string;
+    resumeName: string;
+    name: string;
+    headline: string;
+    email: string;
+    phone: string;
+    location: string;
+    socialLinks: SocialLink[];
+    technicalSkills: string[];
+    languages: string[];
+    educationEntries: Education[];
+    experienceEntries: Experience[];
+    projectEntries: ProjectEntry[];
+    certificationEntries: Certification[];
+}

@@ -4,6 +4,7 @@ import { z } from 'zod';
 import { aiMentorChatbotAssistance } from '../ai/flows/ai-mentor-chatbot-assistance';
 import { generatePersonalizedLearningPath, convertTextToLearningPath } from '../ai/flows/personalized-learning-path-generation';
 import { adjustLearningContent } from '../ai/flows/sentiment-based-learning-adjustment';
+import { generateAboutMe, type GenerateAboutMeInput } from '../ai/flows/portfolio-enhancement';
 import { revalidatePath } from 'next/cache';
 import { LearningPathStep } from '../lib/types';
 
@@ -114,4 +115,25 @@ export async function analyzeSentiment(
   } catch (e) {
     return { error: 'Failed to analyze sentiment.' };
   }
+}
+
+
+// Portfolio Enhancement Action
+type AboutMeState = {
+    aboutMeText?: string;
+    error?: string;
+}
+
+export async function suggestAboutMe(
+    input: GenerateAboutMeInput
+): Promise<AboutMeState> {
+    try {
+        const result = await generateAboutMe(input);
+        return { aboutMeText: result.aboutMeText };
+    } catch(e: any) {
+        if (typeof e.message === 'string' && e.message.includes('503')) {
+          return { error: 'The AI model is currently overloaded. Please try again in a few moments.' };
+        }
+        return { error: 'Failed to generate "About Me" summary.' };
+    }
 }

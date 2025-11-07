@@ -1,15 +1,17 @@
 'use client';
 
+import { useState } from 'react';
 import {
   FileDown,
   Copy,
-  Upload,
+  Sparkles,
   Link as LinkIcon,
   Github,
   Linkedin,
   Twitter,
   Share2,
   Undo2,
+  Check,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
@@ -28,6 +30,8 @@ import { userSkills } from '@/lib/data';
 import Image from 'next/image';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import type { ResumeData } from '@/app/dashboard/portfolio/page';
+import { suggestAboutMe } from '@/app/actions';
+import { Input } from '../ui/input';
 
 interface PortfolioViewProps {
     resumeData: ResumeData;
@@ -38,8 +42,34 @@ interface PortfolioViewProps {
 }
 
 export function PortfolioView({ resumeData, aboutMe, setAboutMe, onDownloadPdf, onClearPortfolio }: PortfolioViewProps) {
-  const portfolioUrl = `https://skillgraph.io/${resumeData.name.toLowerCase().replace(/\s/g, '-')}`;
+  const portfolioUrl = typeof window !== 'undefined' ? `${window.location.origin}/portfolio/${resumeData.name.toLowerCase().replace(/\s/g, '-')}` : '';
   const avatarImage = PlaceHolderImages.find(p => p.id === 'avatar');
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [copySuccess, setCopySuccess] = useState(false);
+
+  const handleGenerateAboutMe = async () => {
+    setIsGenerating(true);
+    const result = await suggestAboutMe({
+        name: resumeData.name,
+        headline: resumeData.headline,
+        technicalSkills: resumeData.technicalSkills,
+        experience: resumeData.experienceEntries,
+        projects: resumeData.projectEntries,
+    });
+    if (result.aboutMeText) {
+        setAboutMe(result.aboutMeText);
+    } else if (result.error) {
+        alert(result.error);
+    }
+    setIsGenerating(false);
+  }
+
+  const handleCopyLink = () => {
+    navigator.clipboard.writeText(portfolioUrl).then(() => {
+        setCopySuccess(true);
+        setTimeout(() => setCopySuccess(false), 2000);
+    });
+  }
   
   return (
     <div>
@@ -50,6 +80,22 @@ export function PortfolioView({ resumeData, aboutMe, setAboutMe, onDownloadPdf, 
             </div>
             <Button variant="outline" onClick={onClearPortfolio}><Undo2 className="mr-2 h-4 w-4"/>Choose a different resume</Button>
         </div>
+        
+        <Card className="mb-6">
+            <CardHeader>
+                <CardTitle>Your Public Portfolio Link</CardTitle>
+                <CardDescription>Share this link with employers, colleagues, and friends.</CardDescription>
+            </CardHeader>
+            <CardContent>
+                <div className="flex items-center gap-2">
+                    <LinkIcon className="h-4 w-4 text-muted-foreground"/>
+                    <Input readOnly value={portfolioUrl} className="bg-secondary/40 border-0" />
+                    <Button onClick={handleCopyLink} variant="outline" size="icon" className="shrink-0">
+                        {copySuccess ? <Check className="h-4 w-4 text-green-500"/> : <Copy className="h-4 w-4" />}
+                    </Button>
+                </div>
+            </CardContent>
+        </Card>
 
         <div className="grid gap-8 md:grid-cols-3 border rounded-lg p-4 lg:p-8 bg-secondary/30">
             <div className="md:col-span-1 space-y-6">
@@ -81,8 +127,12 @@ export function PortfolioView({ resumeData, aboutMe, setAboutMe, onDownloadPdf, 
                 </CardFooter>
                 </Card>
                 <Card>
-                    <CardHeader>
+                    <CardHeader className="flex flex-row items-center justify-between">
                         <CardTitle>About Me</CardTitle>
+                        <Button size="sm" variant="ghost" onClick={handleGenerateAboutMe} disabled={isGenerating}>
+                            <Sparkles className="mr-2 h-4 w-4"/>
+                            {isGenerating ? 'Generating...' : 'AI Suggestion'}
+                        </Button>
                     </CardHeader>
                     <CardContent>
                             <Textarea
@@ -90,6 +140,7 @@ export function PortfolioView({ resumeData, aboutMe, setAboutMe, onDownloadPdf, 
                             onChange={(e) => setAboutMe(e.target.value)}
                             placeholder="Write a short bio about yourself..."
                             className="text-sm text-muted-foreground"
+                            rows={5}
                         />
                     </CardContent>
                 </Card>
