@@ -63,6 +63,12 @@ export default function PortfolioPage() {
   const [newLinkPlatform, setNewLinkPlatform] = useState('');
   const [newLinkUrl, setNewLinkUrl] = useState('');
 
+  // State for Skills & Languages
+  const [technicalSkills, setTechnicalSkills] = useState<string[]>(['React.js']);
+  const [languages, setLanguages] = useState<string[]>(['English']);
+  const [newSkill, setNewSkill] = useState('');
+  const [newLanguage, setNewLanguage] = useState('');
+
   const handleAddSocialLink = () => {
     if (newLinkPlatform && newLinkUrl) {
       setSocialLinks([...socialLinks, { platform: newLinkPlatform, url: newLinkUrl }]);
@@ -73,6 +79,28 @@ export default function PortfolioPage() {
 
   const handleRemoveSocialLink = (index: number) => {
     setSocialLinks(socialLinks.filter((_, i) => i !== index));
+  };
+  
+  const handleAddSkill = () => {
+    if (newSkill.trim()) {
+      setTechnicalSkills([...technicalSkills, newSkill.trim()]);
+      setNewSkill('');
+    }
+  };
+
+  const handleRemoveSkill = (index: number) => {
+    setTechnicalSkills(technicalSkills.filter((_, i) => i !== index));
+  };
+
+  const handleAddLanguage = () => {
+    if (newLanguage.trim()) {
+      setLanguages([...languages, newLanguage.trim()]);
+      setNewLanguage('');
+    }
+  };
+
+  const handleRemoveLanguage = (index: number) => {
+    setLanguages(languages.filter((_, i) => i !== index));
   };
 
 
@@ -191,8 +219,57 @@ export default function PortfolioPage() {
               </>
             )}
 
+            {activeSection === 'Skills & Languages' && (
+              <>
+                <div>
+                  <h2 className="text-2xl font-semibold">Technical Skills</h2>
+                   <div className="flex items-center gap-2 flex-wrap mt-4">
+                      {technicalSkills.map((skill, index) => (
+                        <Badge key={index} variant="secondary" className="py-1 px-3">
+                          {skill}
+                          <Button variant="ghost" size="icon" className="h-4 w-4 ml-2" onClick={() => handleRemoveSkill(index)}>
+                            <Trash2 className="h-3 w-3" />
+                          </Button>
+                        </Badge>
+                      ))}
+                    </div>
+                  <div className="space-y-4 mt-4">
+                    <div className="grid gap-2">
+                      <Label htmlFor="skill">Add a Skill</Label>
+                      <div className="flex gap-2">
+                        <Input id="skill" value={newSkill} onChange={(e) => setNewSkill(e.target.value)} placeholder="e.g., Next.js" />
+                        <Button onClick={handleAddSkill}>Add</Button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div>
+                  <h2 className="text-2xl font-semibold mt-8">Languages</h2>
+                   <div className="flex items-center gap-2 flex-wrap mt-4">
+                      {languages.map((lang, index) => (
+                        <Badge key={index} variant="secondary" className="py-1 px-3">
+                          {lang}
+                          <Button variant="ghost" size="icon" className="h-4 w-4 ml-2" onClick={() => handleRemoveLanguage(index)}>
+                            <Trash2 className="h-3 w-3" />
+                          </Button>
+                        </Badge>
+                      ))}
+                    </div>
+                  <div className="space-y-4 mt-4">
+                    <div className="grid gap-2">
+                      <Label htmlFor="language">Add a Language</Label>
+                      <div className="flex gap-2">
+                        <Input id="language" value={newLanguage} onChange={(e) => setNewLanguage(e.target.value)} placeholder="e.g., Spanish" />
+                        <Button onClick={handleAddLanguage}>Add</Button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </>
+            )}
+
             {/* Other sections will be rendered here based on activeSection */}
-            {activeSection !== 'Personal Info' && (
+            {activeSection !== 'Personal Info' && activeSection !== 'Skills & Languages' && (
               <div className="flex items-center justify-center h-64">
                 <p className="text-muted-foreground">
                   Editing section: {activeSection}
@@ -242,11 +319,19 @@ export default function PortfolioPage() {
                     <div className="grid grid-cols-2 gap-4">
                         <div>
                             <p className="font-semibold">Technical Skills</p>
-                            <Badge variant="outline" className="mt-2">React.js</Badge>
+                            <div className="flex flex-wrap gap-2 mt-2">
+                                {technicalSkills.map((skill, index) => (
+                                    <Badge key={index} variant="outline">{skill}</Badge>
+                                ))}
+                            </div>
                         </div>
                         <div>
                             <p className="font-semibold">Languages</p>
-                            <Badge variant="outline" className="mt-2">English</Badge>
+                            <div className="flex flex-wrap gap-2 mt-2">
+                                {languages.map((lang, index) => (
+                                    <Badge key={index} variant="outline">{lang}</Badge>
+                                ))}
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -257,3 +342,5 @@ export default function PortfolioPage() {
     </div>
   );
 }
+
+    
